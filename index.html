@@ -1,0 +1,2582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>LeadPro v4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+/* Modern LeadPro v4 - Deep Indigo/Violet Theme with Glassmorphism */
+:root {
+  --bg: #0a0a14;
+  --surface: #141422;
+  --card: rgba(20, 20, 34, 0.6);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-2: rgba(255, 255, 255, 0.12);
+  --accent: #667eea;
+  --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --accent-d: rgba(102, 126, 234, 0.12);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --text: #f8fafc;
+  --text-2: #64748b;
+  --text-3: #64748b;
+  --purple: #8b5cf6;
+  --sans: 'Barlow', sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+  --cond: 'Barlow Condensed', sans-serif;
+  --sw: 210px;
+  --r: 10px;
+  --glass-bg: rgba(30, 30, 46, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+  --shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.36);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg) radial-gradient(circle at 50% 0%, rgba(102, 126, 234, 0.05) 0%, transparent 50%);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  overflow: hidden;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--sans);
+}
+
+input, select {
+  font-family: var(--sans);
+}
+
+/* Layout */
+#layout {
+  display: flex;
+  height: 100vh;
+  background: var(--bg);
+}
+
+/* Sidebar - Collapsible feel with gradient logo */
+#sidebar {
+  width: var(--sw);
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  background: rgba(20, 20, 34, 0.8);
+}
+
+#logo {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
+}
+
+#logo .lp {
+  font-family: var(--cond);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+#logo .v {
+  font-size: 11px;
+  color: var(--text-2);
+  font-family: var(--mono);
+  background: var(--border);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+#smtp-dot {
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-3);
+  transition: background 0.3s;
+}
+
+#smtp-dot.ok { background: var(--success); }
+#smtp-dot.fail { background: var(--danger); }
+
+nav {
+  flex: 1;
+  padding: 8px 0;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-2);
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  border-left: 3px solid transparent;
+  margin: 2px 8px;
+  border-radius: 6px;
+}
+
+.nav-item:hover {
+  background: var(--accent-d);
+  color: var(--text);
+  transform: translateX(2px);
+}
+
+.nav-item.active {
+  background: var(--accent-d);
+  color: var(--accent);
+  border-left-color: var(--accent);
+  font-weight: 600;
+  box-shadow: inset 4px 0 0 var(--accent);
+}
+
+.nav-item .icon {
+  width: 16px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.nav-sep {
+  height: 1px;
+  background: var(--border);
+  margin: 8px 20px;
+}
+
+#sidebar-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-3);
+  font-family: var(--mono);
+}
+
+/* Main Content */
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* Topbar - Clean with pill badges */
+#topbar {
+  height: 56px;
+  flex-shrink: 0;
+  background: rgba(20, 20, 34, 0.8);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 12px;
+  backdrop-filter: blur(10px);
+}
+
+#page-title {
+  font-family: var(--cond);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text);
+  flex: 1;
+}
+
+.topbar-badge {
+  font-size: 11px;
+  font-family: var(--mono);
+  padding: 5px 10px;
+  border-radius: 12px;
+  background: var(--border);
+  color: var(--text-2);
+  border: 1px solid var(--border-2);
+}
+
+.topbar-btn {
+  background: none;
+  border: none;
+  color: var(--text-2);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 16px;
+}
+
+.topbar-btn:hover {
+  background: var(--accent-d);
+  color: var(--accent);
+  transform: scale(1.05);
+}
+
+/* Content Area */
+#content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px;
+  background: var(--bg);
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--accent-gradient);
+  opacity: 0.8;
+}
+
+.stat-card.green::before { background: var(--success); }
+.stat-card.warn::before { background: var(--warning); }
+.stat-card.red::before { background: var(--danger); }
+.stat-card.purple::before { background: var(--purple); }
+
+.stat-val {
+  font-family: var(--cond);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+}
+
+.stat-sub {
+  font-size: 11px;
+  color: var(--text-2);
+  margin-top: 4px;
+  font-family: var(--mono);
+}
+
+/* Cards - Glassmorphism */
+.card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r);
+  padding: 20px;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(102, 126, 234, 0.2);
+}
+
+.card-header {
+  font-family: var(--cond);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-2);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Tables - Sticky headers, better row hover */
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead {
+  background: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+th {
+  padding: 12px 16px;
+  text-align: left;
+  font-family: var(--cond);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-2);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: middle;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover td {
+  background: rgba(102, 126, 234, 0.05);
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: var(--mono);
+  white-space: nowrap;
+}
+
+.badge-green { background: var(--success); color: #fff; }
+.badge-warn { background: var(--warning); color: #fff; }
+.badge-dim { background: var(--border); color: var(--text-2); }
+.badge-accent { background: var(--accent-gradient); color: #fff; }
+.badge-danger { background: var(--danger); color: #fff; }
+
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 22px;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+/* Forms - Floating-label style */
+.form-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-2);
+}
+
+input[type=text],
+input[type=number],
+input[type=password],
+input[type=email],
+select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--r);
+  padding: 10px 14px;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+input[type=number] {
+  width: 100px;
+}
+
+/* Buttons - Gradient primaries */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--r);
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--accent-gradient);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-success {
+  background: var(--success);
+  color: #fff;
+}
+
+.btn-success:hover {
+  background: #0ea371;
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border-2);
+  color: var(--text-2);
+}
+
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Terminal / Log */
+.term {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 16px;
+  height: 320px;
+  overflow-y: auto;
+  color: var(--text-2);
+  scroll-behavior: smooth;
+}
+
+.log-info { color: var(--text-2); }
+.log-success { color: var(--success); }
+.log-warning { color: var(--warning); }
+.log-error { color: var(--danger); }
+.log-sent { color: var(--accent); }
+.log-skip { color: var(--text-3); }
+.log-generating { color: var(--purple); }
+.log-progress { color: var(--warning); }
+.log-ts { color: var(--text-3); margin-right: 8px; }
+.log-prefix { margin-right: 6px; }
+.log-prefix i { font-size: 12px; width: 1em; text-align: center; }
+
+/* Progress bars */
+.progress-wrap {
+  margin: 16px 0;
+  display: none;
+}
+
+.progress-wrap.visible {
+  display: block;
+}
+
+.progress-label {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text-2);
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent-gradient);
+  width: 0%;
+  transition: width 0.4s;
+  border-radius: 4px;
+}
+
+/* Filter bar */
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+/* Activity feed */
+.activity-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.act-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.act-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.act-title {
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.act-meta {
+  font-size: 11px;
+  color: var(--text-2);
+  font-family: var(--mono);
+  margin-top: 4px;
+}
+
+/* Modal */
+#modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+#modal-overlay.open {
+  display: flex;
+}
+
+#modal {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r);
+  padding: 28px;
+  width: 600px;
+  max-width: 95vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-hover);
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: var(--text-2);
+  font-size: 20px;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.modal-subject {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent);
+  background: var(--surface);
+  padding: 12px 16px;
+  border-radius: var(--r);
+  margin: 12px 0;
+  border: 1px solid var(--border);
+}
+
+.modal-body {
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  color: var(--text);
+  background: var(--surface);
+  padding: 16px;
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Pain list */
+.pain-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.pain-tag {
+  font-size: 10px;
+  background: rgba(255, 100, 100, 0.1);
+  color: #ff8888;
+  border: 1px solid rgba(255, 100, 100, 0.2);
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* Empty state */
+.empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-2);
+}
+
+.empty p {
+  font-size: 13px;
+}
+
+/* Section headers */
+.sec-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sec-title {
+  font-family: var(--cond);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.sec-sub {
+  font-size: 12px;
+  color: var(--text-2);
+  margin-top: 4px;
+}
+
+/* Settings grid */
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 700px) {
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.setting-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.setting-field input {
+  width: 100%;
+}
+
+.setting-field.full {
+  grid-column: 1 / -1;
+}
+
+.settings-section {
+  margin-bottom: 28px;
+}
+
+.settings-section-title {
+  font-family: var(--cond);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-2);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Pager */
+.pager {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.pager span {
+  font-size: 12px;
+  color: var(--text-2);
+  font-family: var(--mono);
+}
+
+.btn-page {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: var(--border);
+  border: none;
+  color: var(--text-2);
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-page:hover,
+.btn-page.active {
+  background: var(--accent-gradient);
+  color: #fff;
+}
+
+/* Funnel bars */
+.funnel-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.funnel-fill {
+  height: 28px;
+  border-radius: 6px;
+  min-width: 4px;
+  transition: width 0.6s;
+}
+
+.funnel-label {
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--text-2);
+  min-width: 80px;
+}
+
+.funnel-val {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--mono);
+}
+
+/* Outreach tabs */
+.out-tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+  border-bottom: 2px solid transparent;
+}
+
+.out-tab:hover {
+  color: var(--accent);
+}
+
+.out-tab[data-tab].active,
+.out-tab[data-wu-tab].active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* Chart boxes */
+.chart-box {
+  position: relative;
+  width: 100%;
+}
+
+/* Grid layouts */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Light theme overrides */
+.theme-light{--bg:#f1f5f9;--surface:#fff;--card:rgba(255,255,255,.94);--text:#0f172a;--text-2:#374151;--text-3:#506080;--border:rgba(0,0,0,.1);--border-2:rgba(0,0,0,.16);--accent-d:rgba(102,126,234,.12);--glass-bg:rgba(255,255,255,.9);--glass-border:rgba(0,0,0,.1)}
+
+.theme-light .btn-primary {
+  color: #fff;
+}
+
+.theme-light .btn-success {
+  color: #fff;
+}
+
+.theme-light .btn-danger {
+  color: #fff;
+}
+
+.theme-light .btn-outline {
+  color: var(--text-2);
+  border-color: var(--border-2);
+}
+
+.theme-light .btn-outline:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.theme-light .badge-green,
+.theme-light .badge-warn,
+.theme-light .badge-accent {
+  color: #fff;
+}
+
+.theme-light .badge-dim {
+  color: var(--text-2);
+}
+
+.theme-light .score-badge {
+  color: var(--text);
+}
+
+.theme-light .term {
+  background: var(--card);
+  color: var(--text-2);
+}
+
+.theme-light .log-info {
+  color: var(--text-2);
+}
+
+.theme-light .log-generating {
+  color: var(--purple);
+}
+
+.act-icon i {
+  font-size: 12px;
+  line-height: 1;
+  color: var(--text-2);
+}
+
+.theme-light .act-icon i {
+  color: var(--text-2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #sidebar {
+    width: 180px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+  
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .form-group {
+    width: 100%;
+  }
+  
+  input[type=number] {
+    width: 100%;
+  }
+}
+.skip-link{position:absolute;top:-40px;left:8px;background:var(--accent);color:#fff;padding:8px 16px;z-index:9999;border-radius:0 0 var(--r) var(--r);font-size:13px;font-weight:600;transition:top .2s}
+.skip-link:focus{top:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media print{#sidebar,#topbar{display:none}#main{width:100%}}
+@media(max-width:640px){#sidebar{width:48px}#sidebar .nav-item span,#sidebar #logo span,#sidebar-footer{display:none}#main{width:calc(100% - 48px)}}
+</style>
+<link rel="stylesheet" href="new_style.css">
+</head>
+<body>
+<a href="#content" class="skip-link">Skip to content</a>
+<div id="layout">
+<div id="sidebar">
+  <div id="logo"><span class="lp">LEADPRO</span><span class="v">v4</span><span id="smtp-dot" title="SMTP"></span></div>
+  <nav>
+    <button type="button" class="nav-item active" data-page="dashboard" style="background:none;border:none"><span class="icon"><i class="fas fa-chart-line"></i></span>Dashboard</button>
+    <button type="button" class="nav-item" data-page="leadgen" style="background:none;border:none"><span class="icon"><i class="fas fa-users"></i></span>Lead Gen</button>
+    <button type="button" class="nav-item" data-page="campaigns" style="background:none;border:none"><span class="icon"><i class="fas fa-bullhorn"></i></span>Campaigns</button>
+    <button type="button" class="nav-item" data-page="leads" style="background:none;border:none"><span class="icon"><i class="fas fa-list"></i></span>Leads</button>
+    <div class="nav-sep"></div>
+    <button type="button" class="nav-item" data-page="intel" style="background:none;border:none"><span class="icon"><i class="fas fa-brain"></i></span>Intelligence</button>
+    <button type="button" class="nav-item" data-page="outreach" style="background:none;border:none"><span class="icon"><i class="fas fa-paper-plane"></i></span>Outreach</button>
+    <button type="button" class="nav-item" data-page="replies" style="background:none;border:none"><span class="icon"><i class="fas fa-reply"></i></span>Replies</button>
+    <div class="nav-sep"></div>
+    <button type="button" class="nav-item" data-page="analytics" style="background:none;border:none"><span class="icon"><i class="fas fa-chart-pie"></i></span>Analytics</button>
+    <button type="button" class="nav-item" data-page="warmup" style="background:none;border:none"><span class="icon"><i class="fas fa-bolt"></i></span>Warmup</button>
+    <button type="button" class="nav-item" data-page="settings" style="background:none;border:none"><span class="icon"><i class="fas fa-cog"></i></span>Settings</button>
+  </nav>
+  <div id="sidebar-footer">leadpro.db</div>
+</div>
+<div id="main">
+  <div id="topbar">
+    <h1 id="page-title">Dashboard</h1>
+    <span class="topbar-badge" id="total-badge">— leads</span>
+    <span class="topbar-badge" id="time-badge"></span>
+    <button id="theme-toggle" class="topbar-btn" title="Toggle light/dark theme">
+      <i class="fas fa-moon"></i>
+    </button>
+    <button id="logout-btn" class="topbar-btn" title="Sign out" onclick="doLogout()">
+      <i class="fas fa-sign-out-alt"></i>
+    </button>
+  </div>
+  <div id="content">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="section active" id="page-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-val" id="s-total">—</div><div class="stat-label">Total Leads</div></div>
+        <div class="stat-card green"><div class="stat-val" id="s-hot">—</div><div class="stat-label">Hot ≥60</div></div>
+        <div class="stat-card purple"><div class="stat-val" id="s-intent">—</div><div class="stat-label">Hot Intent</div></div>
+        <div class="stat-card warn"><div class="stat-val" id="s-loss">—</div><div class="stat-label">Revenue Gap</div></div>
+        <div class="stat-card"><div class="stat-val" id="s-emailed">—</div><div class="stat-label">Emailed</div></div>
+        <div class="stat-card green"><div class="stat-val" id="s-opened">—</div><div class="stat-label">Opened</div><div class="stat-sub" id="s-open-rate">0%</div></div>
+        <div class="stat-card green"><div class="stat-val" id="s-replied">—</div><div class="stat-label">Replies</div><div class="stat-sub" id="s-rate">0%</div></div>
+        <div class="stat-card warn"><div class="stat-val" id="s-bounced">—</div><div class="stat-label">Bounced</div></div>
+        <div class="stat-card red"><div class="stat-val" id="s-optout">—</div><div class="stat-label">Opted Out</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card"><h3 class="card-header">Leads by Service</h3><div class="chart-box" style="height:220px"><canvas id="service-chart"></canvas></div></div>
+        <div class="card"><h3 class="card-header">Recent Activity <button class="btn btn-outline btn-sm" onclick="loadActivity()"><i class="fas fa-sync-alt"></i></button></h3><div id="activity-feed"><div class="empty"><p>Loading…</p></div></div></div>
+      </div>
+    </div>
+
+    <!-- ══ LEAD GEN ══ -->
+    <div class="section" id="page-leadgen">
+      <div class="sec-header"><div><h2 class="sec-title">Lead Generation</h2><div class="sec-sub">AI-powered niche × city scraping with ops + intent analysis</div></div></div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="form-row">
+          <div class="form-group"><label for="lg-country">Target Country</label><input type="text" id="lg-country" placeholder="Netherlands, USA…" style="width:200px"></div>
+          <div class="form-group"><label for="lg-target">Target Leads</label><input type="number" id="lg-target" value="200" min="10" max="5000"></div>
+          <button class="btn btn-primary" id="lg-btn" onclick="startLeadGen()"><i class="fas fa-play"></i> Start</button>
+          <button class="btn btn-danger" id="lg-stop" style="display:none" onclick="stopJob('leadgen')"><i class="fas fa-stop"></i> Stop</button>
+          <button class="btn btn-outline" id="lg-advanced-toggle" onclick="toggleAdvancedFilters()">Advanced Filters ▼</button>
+        </div>
+        <div id="lg-advanced-filters" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-2);margin-bottom:10px">Targeting</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="lg-industry">Industry / Niche</label>
+              <input type="text" id="lg-industry" placeholder="dentist, plumber, roofer…" style="width:200px">
+              <span style="font-size:10px;color:var(--text-3);margin-top:3px">Leave blank for AI-generated niches</span>
+            </div>
+            <div class="form-group">
+              <label for="lg-business-type">Business Type</label>
+              <select id="lg-business-type" style="width:160px">
+                <option value="">All Types</option>
+                <option value="ecommerce">E-commerce / Online Store</option>
+                <option value="service">Local Service Business</option>
+                <option value="restaurant">Restaurant / Food</option>
+                <option value="saas">SaaS / Software</option>
+                <option value="clinic">Clinic / Medical</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="lg-city">City Override</label>
+              <input type="text" id="lg-city" placeholder="Amsterdam, NYC…" style="width:150px">
+              <span style="font-size:10px;color:var(--text-3);margin-top:3px">Restrict to one city</span>
+            </div>
+          </div>
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-2);margin-bottom:10px;margin-top:6px">Quality Filters</div>
+          <div class="form-row">
+            <div class="form-group"><label for="lg-min-lead-score">Min Lead Score</label><input type="number" id="lg-min-lead-score" min="0" max="100" placeholder="0" style="width:80px"></div>
+            <div class="form-group"><label for="lg-min-ops-score">Min Ops Score</label><input type="number" id="lg-min-ops-score" min="0" max="100" placeholder="0" style="width:80px"></div>
+            <div class="form-group"><label for="lg-min-intent-score">Min Intent Score</label><input type="number" id="lg-min-intent-score" min="0" max="100" placeholder="0" style="width:80px"></div>
+            <div class="form-group" style="justify-content:flex-end;padding-bottom:2px">
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;text-transform:none;font-size:12px;font-weight:500;letter-spacing:0">
+                <input type="checkbox" id="lg-exclude-competitors"> Exclude Competitors
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;text-transform:none;font-size:12px;font-weight:500;letter-spacing:0;margin-top:6px">
+                <input type="checkbox" id="lg-include-clean"> Include Clean Leads (no gaps)
+              </label>
+            </div>
+          </div>
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-2);margin-bottom:10px;margin-top:6px">Sources &amp; Tech Filters</div>
+          <div class="form-row" style="align-items:flex-start">
+            <div class="form-group">
+              <label for="lg-source-selection">Data Sources <span style="font-weight:400;text-transform:none;font-size:10px">(hold Ctrl/Cmd for multi)</span></label>
+              <select id="lg-source-selection" multiple style="width:210px;height:88px;font-size:12px">
+                <option value="serper_maps">Serper Maps (GMB)</option>
+                <option value="google_places">Google Places API</option>
+                <option value="serper_web">Serper Web (E-commerce)</option>
+                <option value="yelp">Yelp (Local Businesses)</option>
+              </select>
+              <span style="font-size:10px;color:var(--text-3);margin-top:3px">None selected = all sources</span>
+            </div>
+            <div class="form-group">
+              <label for="lg-tech-stack-filters">Target Tech Gaps <span style="font-weight:400;text-transform:none;font-size:10px">(hold Ctrl/Cmd for multi)</span></label>
+              <select id="lg-tech-stack-filters" multiple style="width:210px;height:88px;font-size:12px">
+                <option value="cms">Missing CMS</option>
+                <option value="booking">No Booking System</option>
+                <option value="payments">No Payments</option>
+                <option value="chat">No Live Chat</option>
+                <option value="email_marketing">No Email Marketing</option>
+                <option value="crm">No CRM</option>
+                <option value="analytics">No Analytics</option>
+              </select>
+              <span style="font-size:10px;color:var(--text-3);margin-top:3px">Filter for leads missing these tools</span>
+            </div>
+          </div>
+        </div>
+        <div class="progress-wrap" id="lg-progress"><div class="progress-label"><span id="lg-prog-label">0 leads</span><span id="lg-prog-pct">0%</span></div><div class="progress-bar"><div class="progress-fill" id="lg-prog-fill"></div></div></div>
+      </div>
+      <div class="card"><h3 class="card-header">Live Log <button class="btn btn-outline btn-sm" onclick="clearLog('terminal')">Clear</button></h3><div class="term" aria-live="polite" role="log" id="terminal"><span class="log-info">Ready.</span></div></div>
+    </div>
+
+    <!-- ══ CAMPAIGNS ══ -->
+     <div class="section" id="page-campaigns">
+       <div class="sec-header"><div><h2 class="sec-title">Campaigns</h2></div><button class="btn btn-primary" onclick="toggleNewCampaign()">+ New Campaign</button></div>
+       <div class="card" id="new-campaign-form" style="display:none;margin-bottom:16px"><h3 class="card-header">Create Campaign</h3><div class="form-row"><div class="form-group"><label for="nc-name">Name</label><input type="text" id="nc-name" placeholder="UK Spring 2025" style="width:220px"></div><div class="form-group"><label for="nc-country">Country</label><input type="text" id="nc-country" placeholder="United Kingdom" style="width:180px"></div><div class="form-group"><label for="nc-lead-batch">Lead Batch</label><select id="nc-lead-batch" style="width:260px"><option value="">Loading batches…</option></select></div><button class="btn btn-success" onclick="createCampaign()">Create</button><button class="btn btn-outline" onclick="toggleNewCampaign()">Cancel</button></div></div>
+       <div class="table-wrap"><table><thead><tr><th>ID</th><th>Name</th><th>Country</th><th>Status</th><th>Leads</th><th>Created</th><th></th></tr></thead><tbody id="campaigns-body"><tr><td colspan="7" style="text-align:center;color:var(--text-2);padding:32px">Loading…</td></tr></tbody></table></div>
+     </div>
+
+    <!-- ══ LEADS ══ -->
+    <div class="section" id="page-leads">
+      <div class="sec-header"><div><h2 class="sec-title">Lead Database</h2><div class="sec-sub" id="leads-count-label">Loading…</div></div><button class="btn btn-outline" onclick="exportLeads(this)"><i class="fas fa-download"></i> Export</button></div>
+      <div class="filter-bar">
+        <div class="form-group"><label for="f-score">Min Score</label><input type="number" id="f-score" value="0" min="0" max="100" onchange="loadLeads(0)" style="width:75px"></div>
+        <div class="form-group"><label for="f-country">Country</label><select id="f-country" onchange="loadLeads(0)"><option value="">All</option></select></div>
+        <div class="form-group"><label for="f-service">Service</label><select id="f-service" onchange="loadLeads(0)"><option value="">All</option></select></div>
+        <div class="form-group"><label for="f-email">Has Email</label><select id="f-email" onchange="loadLeads(0)"><option value="">All</option><option value="1">Yes</option></select></div>
+        <div class="form-group"><label for="f-sort">Sort By</label><select id="f-sort" onchange="loadLeads(0)"><option value="lead_score">Lead Score</option><option value="intent_score">Intent Score</option><option value="estimated_monthly_loss">Revenue Loss</option><option value="ops_score">Ops Score</option></select></div>
+        <button class="btn btn-outline" onclick="loadLeads(0)"><i class="fas fa-sync-alt"></i></button>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>Score</th><th>Intent</th><th>Loss/mo</th><th>Business</th><th>Contact</th><th>Email</th><th>Phone</th><th>Location</th><th>Service</th><th>Pains</th><th>Tech Gaps</th><th></th></tr></thead><tbody id="leads-body"><tr><td colspan="12" style="text-align:center;color:var(--text-2);padding:32px">Loading…</td></tr></tbody></table></div>
+      <div class="pager" id="leads-pager"></div>
+    </div>
+
+    <!-- ══ INTELLIGENCE ══ -->
+    <div class="section" id="page-intel">
+      <div class="sec-header"><div><h2 class="sec-title">Intelligence Engine</h2><div class="sec-sub">SEO rankings · competitor audit · owner enrichment · audit pages</div></div></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-val" id="seo-tracked">—</div><div class="stat-label">Leads Tracked</div></div>
+        <div class="stat-card green"><div class="stat-val" id="seo-p1">—</div><div class="stat-label">Page 1</div></div>
+        <div class="stat-card red"><div class="stat-val" id="seo-miss">—</div><div class="stat-label">Not Ranking</div></div>
+        <div class="stat-card"><div class="stat-val" id="seo-avg">—</div><div class="stat-label">Avg Position</div></div>
+      </div>
+      <div class="grid-2" style="margin-bottom:16px">
+        <div class="card">
+          <h3 class="card-header">Run Intelligence</h3>
+          <p style="font-size:12px;color:var(--text-2);margin-bottom:12px">For each lead: checks 5 keyword rankings, audits 3 competitors, finds owner name via Google, recalculates ROI, generates a shareable audit page. Skips leads analyzed in the last 7 days.</p>
+          <div class="form-row"><div class="form-group"><label for="intel-min">Min Score</label><input type="number" id="intel-min" value="50" style="width:80px"></div><div class="form-group"><label for="intel-country">Country</label><input type="text" id="intel-country" placeholder="All" style="width:100px"></div><div class="form-group"><label for="intel-service">Service</label><input type="text" id="intel-service" placeholder="All" style="width:100px"></div><button class="btn btn-primary" id="intel-btn" onclick="startIntel()"><i class="fas fa-brain"></i> Analyze</button><button class="btn btn-danger" id="intel-stop" style="display:none" onclick="stopJob('intel')"><i class="fas fa-stop"></i></button></div>
+          <div class="progress-wrap" id="intel-progress"><div class="progress-label"><span id="intel-prog-label">0 / 0</span><span id="intel-prog-pct">0%</span></div><div class="progress-bar"><div class="progress-fill" id="intel-prog-fill"></div></div></div>
+          <div class="term" aria-live="polite" role="log" id="intel-terminal" style="height:240px"><span class="log-info">Set min score and click Analyze.</span></div>
+        </div>
+        <div class="card">
+          <h3 class="card-header">Proposals & Audit Pages</h3>
+          <p style="font-size:12px;color:var(--text-2);margin-bottom:12px">Generate PDF proposals or interactive audit pages for individual leads. Audit pages include $ impact, SEO rankings, competitor tables, and a CTA.</p>
+          <div class="form-row"><div class="form-group"><label for="prop-id">Lead ID</label><input type="number" id="prop-id" placeholder="123" style="width:90px"></div><button class="btn btn-success" onclick="genProposal()"><i class="fas fa-file-pdf"></i> PDF</button><button class="btn btn-primary" onclick="genAuditPageById(this)"><i class="fas fa-chart-bar"></i> Audit Page</button></div>
+          <div class="form-row"><button class="btn btn-outline" onclick="genExecSummary()"><i class="fas fa-file-alt"></i> Executive Summary</button><button class="btn btn-outline" onclick="genRecommendations()"><i class="fas fa-lightbulb"></i> Recommendations</button></div>
+          <div class="form-row"><button class="btn btn-outline" onclick="batchProposals()"><i class="fas fa-copy"></i> Batch PDFs (Top 20)</button></div>
+          <div class="form-row"><button class="btn btn-outline" onclick="cleanupAuditPages(this)"><i class="fas fa-trash-alt"></i> Cleanup Expired Pages</button></div>
+          <div id="prop-status" style="font-family:var(--mono);font-size:12px;color:var(--text-2);margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ OUTREACH ══ -->
+    <div class="section" id="page-outreach">
+      <div class="sec-header"><div><h2 class="sec-title">Outreach Engine</h2><div class="sec-sub">AI emails with owner names, $ impact, and open/click tracking</div></div></div>
+      <div style="display:flex;gap:0;margin-bottom:18px;border-bottom:1px solid var(--border)">
+        <div class="out-tab" data-tab="initial" onclick="switchOutTab('initial')">Initial Emails</div>
+        <div class="out-tab" data-tab="followup" onclick="switchOutTab('followup')">Follow-ups</div>
+        <div class="out-tab" data-tab="whatsapp" onclick="switchOutTab('whatsapp')">WhatsApp</div>
+      </div>
+      <div id="out-tab-initial">
+        <div class="card" style="margin-bottom:14px"><div class="form-row" style="margin-bottom:0"><div class="form-group"><label for="out-campaign">Campaign</label><select id="out-campaign" style="width:220px"><option value="">Loading…</option></select></div><div class="form-group"><label for="out-min-score">Min Score</label><input type="number" id="out-min-score" value="40" min="0" max="100"></div><button class="btn btn-outline" onclick="previewOutreach()"><i class="fas fa-eye"></i> Preview</button><button class="btn btn-success" id="out-send-btn" onclick="startOutreach()" disabled><i class="fas fa-paper-plane"></i> Send</button><button class="btn btn-danger" id="out-stop-btn" style="display:none" onclick="stopJob('outreach')"><i class="fas fa-stop"></i></button></div></div>
+        <div id="out-preview-wrap" style="display:none;margin-bottom:14px"><div class="card"><h3 class="card-header"><span id="out-preview-label">Preview</span><div style="display:flex;gap:8px"><button class="btn btn-outline btn-sm" onclick="selectAllLeads()">All</button><button class="btn btn-outline btn-sm" onclick="clearLeadSelection()">Clear</button></div></h3><div class="table-wrap" style="max-height:280px;overflow-y:auto"><table><thead><tr><th><input type="checkbox" id="sel-all" onchange="toggleAllLeads(this)"></th><th>Score</th><th>Loss</th><th>Business</th><th>Contact</th><th>Email</th><th></th></tr></thead><tbody id="out-preview-body"></tbody></table></div></div></div>
+        <div class="card"><h3 class="card-header">Delivery Log <button class="btn btn-outline btn-sm" onclick="clearLog('out-terminal')">Clear</button></h3><div class="term" aria-live="polite" role="log" id="out-terminal"><span class="log-info">Select a campaign and preview.</span></div></div>
+      </div>
+      <div id="out-tab-followup" style="display:none">
+        <div class="card" style="margin-bottom:14px"><div style="font-size:13px;color:var(--text-2);margin-bottom:14px">Scans inbox first, then sends Day 3/7/14 follow-ups to leads that haven't replied.</div><div class="form-row" style="margin-bottom:0"><button class="btn btn-success" onclick="startFollowups()"><i class="fas fa-play"></i> Run Follow-ups</button></div></div>
+        <div class="card"><h3 class="card-header">Follow-up Log</h3><div class="term" aria-live="polite" role="log" id="fu-terminal"><span class="log-info">Click Run.</span></div></div>
+      </div>
+
+      <!-- WhatsApp Tab -->
+      <div id="out-tab-whatsapp" style="display:none">
+        <div class="card" style="margin-bottom:14px">
+          <h3 class="card-header">WhatsApp Message Generator</h3>
+          <p style="font-size:12px;color:var(--text-2);margin-bottom:14px">Select leads with phone numbers and generate AI-written WhatsApp messages tailored to each business's pain points.</p>
+          <div class="form-row">
+            <div class="form-group"><label for="wa-min-score">Min Lead Score</label><input type="number" id="wa-min-score" value="40" min="0" max="100" style="width:80px"></div>
+            <button class="btn btn-outline" onclick="loadWaLeads()"><i class="fas fa-sync-alt"></i> Load Leads</button>
+          </div>
+          <div id="wa-leads-wrap" style="display:none;margin-top:12px">
+            <div class="table-wrap" style="max-height:260px;overflow-y:auto">
+              <table><thead><tr>
+                <th><input type="checkbox" id="wa-sel-all" onchange="toggleAllWa(this)"></th>
+                <th>Score</th><th>Business</th><th>Phone</th><th>Service</th><th>Contact</th><th></th>
+              </tr></thead><tbody id="wa-leads-body"></tbody></table>
+            </div>
+            <div class="form-row" style="margin-top:12px;margin-bottom:0">
+              <button class="btn btn-success" id="wa-gen-btn" onclick="generateWhatsAppBatch()"><i class="fas fa-plus-circle"></i> Generate Messages</button>
+              <span style="font-size:12px;color:var(--text-2);align-self:center" id="wa-sel-count">0 selected</span>
+            </div>
+          </div>
+        </div>
+        <div id="wa-results-wrap" style="display:none">
+          <div class="card"><h3 class="card-header">Generated Messages <button class="btn btn-outline btn-sm" onclick="clearWaResults()">Clear</button></h3>
+            <div id="wa-messages-list" style="display:flex;flex-direction:column;gap:10px;max-height:400px;overflow-y:auto;padding:4px"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px"><h3 class="card-header">Log</h3><div class="term" aria-live="polite" role="log" id="whatsapp-terminal" style="height:160px"><span class="log-info">Load leads and generate messages.</span></div></div>
+      </div>
+    </div>
+
+    <!-- ══ REPLIES ══ -->
+    <div class="section" id="page-replies">
+      <div class="sec-header"><div><h2 class="sec-title">Reply Monitor</h2><div class="sec-sub">IMAP inbox scanner</div></div><button class="btn btn-primary" onclick="startReplyScan()"><i class="fas fa-inbox"></i> Scan Inbox</button></div>
+      <div class="grid-2">
+        <div class="card"><h3 class="card-header">Results</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="text-align:center;padding:16px;background:var(--surface);border-radius:var(--r);border:1px solid var(--border)"><div style="font-family:var(--cond);font-size:28px;font-weight:700" id="rep-scanned">—</div><div style="font-size:10px;color:var(--text-2);margin-top:4px;text-transform:uppercase;letter-spacing:.6px">Scanned</div></div>
+          <div style="text-align:center;padding:16px;background:var(--surface);border-radius:var(--r);border:1px solid var(--border)"><div style="font-family:var(--cond);font-size:28px;font-weight:700;color:var(--success)" id="rep-replies">—</div><div style="font-size:10px;color:var(--text-2);margin-top:4px;text-transform:uppercase;letter-spacing:.6px">Replies</div></div>
+          <div style="text-align:center;padding:16px;background:var(--surface);border-radius:var(--r);border:1px solid var(--border)"><div style="font-family:var(--cond);font-size:28px;font-weight:700;color:var(--danger)" id="rep-optouts">—</div><div style="font-size:10px;color:var(--text-2);margin-top:4px;text-transform:uppercase;letter-spacing:.6px">Opt-outs</div></div>
+          <div style="text-align:center;padding:16px;background:var(--surface);border-radius:var(--r);border:1px solid var(--border)"><div style="font-family:var(--cond);font-size:28px;font-weight:700;color:var(--warning)" id="rep-errors">—</div><div style="font-size:10px;color:var(--text-2);margin-top:4px;text-transform:uppercase;letter-spacing:.6px">Errors</div></div>
+        </div></div>
+        <div class="card"><h3 class="card-header">Log</h3><div class="term" aria-live="polite" role="log" id="rep-terminal" style="height:260px"><span class="log-info">Click Scan Inbox.</span></div></div>
+      </div>
+    </div>
+
+    <!-- ══ ANALYTICS ══ -->
+    <div class="section" id="page-analytics">
+      <div class="sec-header"><div><h2 class="sec-title">Conversion Analytics</h2><div class="sec-sub">Full pipeline visibility</div></div><button class="btn btn-outline" onclick="loadAnalytics()"><i class="fas fa-sync-alt"></i> Refresh</button></div>
+      <div class="card" style="margin-bottom:16px"><h3 class="card-header">Conversion Funnel</h3><div id="funnel-container"></div></div>
+      <div class="grid-2" style="margin-bottom:16px">
+        <div class="card"><h3 class="card-header">Daily Volume (14d)</h3><div class="chart-box" style="height:180px"><canvas id="vol-chart"></canvas></div></div>
+        <div class="card"><h3 class="card-header">Campaign Performance</h3><div class="table-wrap" style="max-height:240px;overflow-y:auto"><table><thead><tr><th>Campaign</th><th>Sent</th><th>Opens</th><th>Replies</th><th>Proposals</th></tr></thead><tbody id="camp-perf-body"><tr><td colspan="5" style="color:var(--text-2);text-align:center">Loading…</td></tr></tbody></table></div></div>
+        <div class="card"><h3 class="card-header">Bounce Stats</h3><div class="table-wrap" style="max-height:240px;overflow-y:auto"><table><thead><tr><th>Type</th><th>Count</th></tr></thead><tbody id="bounce-stats-body"><tr><td colspan="2" style="color:var(--text-2);text-align:center">Loading…</td></tr></tbody></table></div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card"><h3 class="card-header">Reply Rate by Service</h3><div class="chart-box" style="height:200px"><canvas id="svc-reply-chart"></canvas></div></div>
+        <div class="card"><h3 class="card-header">Top Source Queries</h3><div class="table-wrap" style="max-height:240px;overflow-y:auto"><table><thead><tr><th>Query</th><th>Leads</th><th>Score</th><th>Replies</th></tr></thead><tbody id="qry-perf-body"><tr><td colspan="4" style="color:var(--text-2);text-align:center">Loading…</td></tr></tbody></table></div></div>
+      </div>
+    </div>
+
+    <!-- ══ WARMUP ══ -->
+    <div class="section" id="page-warmup">
+      <div class="sec-header">
+        <div><h2 class="sec-title">Email Warmup</h2><div class="sec-sub">Build sender reputation for individual SMTP accounts</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline" onclick="loadWarmupPlacement()"><i class="fas fa-chart-bar"></i> Check Placement</button>
+          <button class="btn btn-outline" onclick="rescueAllSpam(this)"><i class="fas fa-life-ring"></i> Rescue All from Spam</button>
+          <button class="btn btn-primary" onclick="runWarmup()"><i class="fas fa-bolt"></i> Run Cycle</button>
+        </div>
+      </div>
+
+      <div id="wu-brevo-notice" style="display:none;padding:12px 16px;border-radius:var(--r);margin-bottom:16px;font-size:13px;line-height:1.6;background:rgba(33,150,243,.08);border:1px solid rgba(33,150,243,.2);color:var(--text)">
+        <strong style="color:#64b5f6">Using Brevo Relay?</strong> Brevo handles IP and domain warmup automatically — you don't need this section for Brevo agents. This warmup tool is for <strong>individual SMTP accounts</strong> (e.g. Gmail with app passwords). Once a sender reaches Day 28 "ready" status, promote it to an Outreach Account below.
+      </div>
+
+      <!-- Add Account -->
+      <div class="card" style="margin-bottom:16px">
+        <h3 class="card-header">Add Warmup Account <span style="font-weight:400;font-size:11px;color:var(--text-2);text-transform:none;letter-spacing:0">— for individual SMTP accounts only (not Brevo)</span></h3>
+        <div class="form-row" style="margin-bottom:8px">
+          <div class="form-group"><label for="wu-email">Email</label><input type="email" id="wu-email" placeholder="warm@domain.com" style="width:190px"></div>
+          <div class="form-group"><label for="wu-pass">App Password</label><input type="password" id="wu-pass" placeholder="••••••••" style="width:140px"></div>
+          <div class="form-group"><label for="wu-domain">Domain</label><input type="text" id="wu-domain" placeholder="domain.com" style="width:140px"></div>
+          <div class="form-group"><label for="wu-role">Role</label>
+            <select id="wu-role" style="width:120px">
+              <option value="sender">Sender (warms up)</option>
+              <option value="receiver">Receiver (inbox buddy)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" style="margin-bottom:0">
+          <div class="form-group"><label for="wu-smtp-host">SMTP Host</label><input type="text" id="wu-smtp-host" placeholder="smtp.gmail.com" style="width:170px"></div>
+          <div class="form-group"><label for="wu-smtp-port">SMTP Port</label><input type="number" id="wu-smtp-port" value="587" style="width:80px"></div>
+          <div class="form-group"><label for="wu-imap-host">IMAP Host</label><input type="text" id="wu-imap-host" placeholder="imap.gmail.com" style="width:170px"></div>
+          <button class="btn btn-success" onclick="addWarmupAcct()">+ Add Account</button>
+        </div>
+      </div>
+
+      <!-- Accounts Table -->
+      <div class="card" style="margin-bottom:16px">
+        <h3 class="card-header">Accounts <button class="btn btn-outline btn-sm" onclick="loadWuAccts()"><i class="fas fa-sync-alt"></i></button></h3>
+        <div class="table-wrap">
+          <table><thead><tr><th>Email</th><th>Domain</th><th>Role</th><th>Day</th><th>Daily Limit</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="wu-accounts-body"><tr><td colspan="7" style="color:var(--text-2);text-align:center;padding:24px">No accounts. Add a sender and receiver to begin.</td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- Warmup Tabs -->
+      <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--border)">
+        <div class="out-tab" data-wu-tab="run" onclick="switchWuTab('run')" style="color:var(--accent);border-bottom:2px solid var(--accent)">Run Log</div>
+        <div class="out-tab" data-wu-tab="placement" onclick="switchWuTab('placement')" style="color:var(--text-2);border-bottom:2px solid transparent">Placement Stats</div>
+        <div class="out-tab" data-wu-tab="logs" onclick="switchWuTab('logs')" style="color:var(--text-2);border-bottom:2px solid transparent">Email Logs</div>
+      </div>
+
+      <div id="wu-tab-run">
+        <div class="card"><h3 class="card-header">Warmup Run Log</h3><div class="term" aria-live="polite" role="log" id="warmup-terminal" style="height:300px"><span class="log-info">Add sender + receiver accounts then click Run Cycle.</span></div></div>
+      </div>
+
+      <div id="wu-tab-placement" style="display:none">
+        <div class="stats-grid" id="wu-placement-stats" style="margin-bottom:16px">
+          <div class="stat-card"><div class="stat-val" id="wu-total-sent">—</div><div class="stat-label">Total Sent</div></div>
+          <div class="stat-card green"><div class="stat-val" id="wu-total-rescued">—</div><div class="stat-label">Rescued from Spam</div></div>
+          <div class="stat-card warn"><div class="stat-val" id="wu-domains-count">—</div><div class="stat-label">Domains Tracked</div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><h3 class="card-header">By Domain</h3>
+            <div class="table-wrap"><table><thead><tr><th>Domain</th><th>Sent</th><th>Rescued</th></tr></thead>
+            <tbody id="wu-domain-stats-body"><tr><td colspan="3" style="color:var(--text-2);text-align:center;padding:16px">Click Check Placement</td></tr></tbody></table></div>
+          </div>
+          <div class="card"><h3 class="card-header">Per-Account Placement Check</h3>
+            <p style="font-size:12px;color:var(--text-2);margin-bottom:12px">Check inbox vs spam placement for a specific receiver account.</p>
+            <div class="form-row">
+              <div class="form-group"><label for="wu-check-id">Account ID</label><input type="number" id="wu-check-id" placeholder="1" style="width:80px"></div>
+              <button class="btn btn-outline" onclick="checkAccountPlacement()">Check</button>
+              <button class="btn btn-outline" onclick="rescueAccount()"><i class="fas fa-life-ring"></i> Rescue</button>
+              <button class="btn btn-outline" onclick="testWuAccount()"><i class="fas fa-bolt"></i> Test SMTP</button>
+            </div>
+            <div id="wu-placement-result" style="font-family:var(--mono);font-size:12px;color:var(--text-2);margin-top:8px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="wu-tab-logs" style="display:none">
+        <div class="card">
+          <h3 class="card-header">Warmup Email Logs <button class="btn btn-outline btn-sm" onclick="loadWarmupLogs()"><i class="fas fa-sync-alt"></i> Refresh</button></h3>
+          <div class="table-wrap" style="max-height:400px;overflow-y:auto">
+            <table><thead><tr><th>Sent At</th><th>From</th><th>To</th><th>Subject</th><th>Rescued</th></tr></thead>
+            <tbody id="wu-logs-body"><tr><td colspan="5" style="color:var(--text-2);text-align:center;padding:24px">Click Refresh to load logs.</td></tr></tbody></table>
+          </div>
+          <div class="pager" id="wu-logs-pager"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SETTINGS ══ -->
+    <div class="section" id="page-settings">
+      <div class="sec-header"><div><h2 class="sec-title">Configuration</h2><div class="sec-sub">Saved to .env</div></div><button class="btn btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> Save</button></div>
+      <div id="settings-status" style="display:none;padding:10px 14px;border-radius:var(--r);margin-bottom:16px;font-size:13px"></div>
+      <div class="card settings-section">
+        <div class="settings-section-title">Default Identity</div>
+        <p style="font-size:12px;color:var(--text-2);margin-bottom:14px;line-height:1.6">
+          Your name and company are used as defaults across the app — in email footers, AI-generated sign-offs, and as the fallback From name when outreach accounts don't specify one.
+        </p>
+        <div class="settings-grid">
+          <div class="setting-field"><label for="cfg-YOUR_NAME">Your Name</label><input type="text" id="cfg-YOUR_NAME" placeholder="Alex"></div>
+          <div class="setting-field"><label for="cfg-YOUR_COMPANY">Company</label><input type="text" id="cfg-YOUR_COMPANY" placeholder="Acme Marketing"></div>
+        </div>
+      </div>
+      <div class="card settings-section">
+        <div class="settings-section-title">Legacy SMTP Fallback</div>
+        <p style="font-size:12px;color:var(--text-2);margin-bottom:14px;line-height:1.6">
+          These credentials are only used when <strong style="color:var(--text)">no outreach accounts</strong> are configured. If you're using Brevo Relay or multiple SMTP accounts (configured below), you can leave these blank.
+        </p>
+        <div class="settings-grid">
+          <div class="setting-field full"><label for="cfg-YOUR_EMAIL">Fallback Email Address <span style="font-weight:400;font-size:10px;color:var(--text-3)">(must match SMTP login)</span></label><input type="email" id="cfg-YOUR_EMAIL" placeholder="you@yourdomain.com"></div>
+          <div class="setting-field full"><label for="cfg-YOUR_APP_PASSWORD">Fallback SMTP Password <span style="font-weight:400;font-size:10px;color:var(--text-3)">(Gmail: generate at myaccount.google.com → Security → App passwords)</span></label><input type="password" id="cfg-YOUR_APP_PASSWORD"></div>
+        </div>
+      </div>
+      <div class="card settings-section">
+        <div class="settings-section-title">API Keys</div>
+        <div class="settings-grid">
+          <div class="setting-field"><label for="cfg-SERPER_API_KEY">Serper API Key <span style="font-weight:400;font-size:10px;color:var(--text-3)">(required — lead gen)</span></label><input type="password" id="cfg-SERPER_API_KEY"></div>
+          <div class="setting-field"><label for="cfg-OPENROUTER_API_KEY">OpenRouter API Key <span style="font-weight:400;font-size:10px;color:var(--text-3)">(required — AI)</span></label><input type="password" id="cfg-OPENROUTER_API_KEY"></div>
+          <div class="setting-field"><label for="cfg-PAGESPEED_API_KEY">PageSpeed API Key <span style="font-weight:400;font-size:10px;color:var(--text-3)">(optional)</span></label><input type="password" id="cfg-PAGESPEED_API_KEY"></div>
+          <div class="setting-field"><label for="cfg-HUNTER_API_KEY">Hunter.io API Key <span style="font-weight:400;font-size:10px;color:var(--text-3)">(optional — email finding)</span></label><input type="password" id="cfg-HUNTER_API_KEY"></div>
+          <div class="setting-field"><label for="cfg-GOOGLE_PLACES_API_KEY">Google Places API Key</label><input type="password" id="cfg-GOOGLE_PLACES_API_KEY"></div>
+          <div class="setting-field"><label for="cfg-YELP_API_KEY">Yelp API Key</label><input type="password" id="cfg-YELP_API_KEY"></div>
+          <div class="setting-field"><label for="cfg-CRUNCHBASE_API_KEY">Crunchbase API Key</label><input type="password" id="cfg-CRUNCHBASE_API_KEY"></div>
+          <div class="setting-field"><label for="cfg-SHOPIFY_API_KEY">Shopify API Key</label><input type="password" id="cfg-SHOPIFY_API_KEY"></div>
+          <div class="setting-field"><label for="cfg-GITHUB_API_KEY">GitHub API Key</label><input type="password" id="cfg-GITHUB_API_KEY"></div>
+          <div class="setting-field"><label for="cfg-CLEARBIT_API_KEY">Clearbit API Key</label><input type="password" id="cfg-CLEARBIT_API_KEY"></div>
+        </div>
+      </div>
+      <div class="card settings-section">
+        <div class="settings-section-title">Outreach Accounts</div>
+        <p style="font-size:12px;color:var(--text-2);margin-bottom:16px;line-height:1.6">
+          These are your <strong style="color:var(--text)">primary sending accounts</strong> used for all campaign emails and follow-ups. Add multiple accounts and the engine automatically rotates between them based on each account's daily limit. For Brevo Relay mode, all agents share a single SMTP connection to Brevo and send from your subdomain.
+        </p>
+
+        <!-- Add form -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:16px">
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-2);margin-bottom:10px">Add Account</div>
+          <div class="form-row" style="margin-bottom:8px">
+            <div class="form-group">
+              <label for="oa-sending-mode">Sending Mode</label>
+              <select id="oa-sending-mode" onchange="toggleOaMode()" style="width:180px;padding:6px 8px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px">
+                <option value="smtp_password">SMTP Password (legacy)</option>
+                <option value="brevo_relay">Brevo Relay</option>
+              </select>
+            </div>
+            <div class="form-group"><label for="oa-email">Email</label><input type="email" id="oa-email" placeholder="you@yourdomain.com" style="width:200px"></div>
+            <div class="form-group" id="oa-pass-group"><label for="oa-pass">Password / App Password</label><input type="password" id="oa-pass" style="width:150px"></div>
+            <div class="form-group"><label for="oa-name">Display Name</label><input type="text" id="oa-name" placeholder="Alex from Acme" style="width:160px"></div>
+          </div>
+          <div class="form-row" style="margin-bottom:8px">
+            <div class="form-group oa-smtp-fields"><label for="oa-smtp-host">SMTP Host</label><input type="text" id="oa-smtp-host" placeholder="smtp.gmail.com" style="width:170px"></div>
+            <div class="form-group oa-smtp-fields"><label for="oa-smtp-port">SMTP Port</label><input type="number" id="oa-smtp-port" value="587" style="width:80px"></div>
+            <div class="form-group oa-smtp-fields"><label for="oa-imap-host">IMAP Host</label><input type="text" id="oa-imap-host" placeholder="imap.gmail.com" style="width:170px"></div>
+            <div class="form-group"><label for="oa-daily-limit">Daily Limit</label><input type="number" id="oa-daily-limit" value="150" style="width:80px"></div>
+          </div>
+          <div class="form-row oa-brevo-fields" style="margin-bottom:0;display:none">
+            <div class="form-group" style="flex:1"><label for="oa-signature">Signature <span style="font-weight:400;font-size:10px;color:var(--text-3)">(appended to every email from this agent)</span></label><textarea id="oa-signature" rows="2" placeholder="Sarah | Growth Consultant&#10;DD Marketer — helping local businesses grow" style="width:100%;padding:6px 8px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:12px;font-family:inherit"></textarea></div>
+          </div>
+          <div style="margin-top:10px">
+            <button class="btn btn-success" onclick="addOutreachAccount()">+ Add</button>
+          </div>
+        </div>
+
+        <!-- Accounts table -->
+        <div class="table-wrap" style="margin-bottom:14px">
+          <table><thead><tr><th>Email</th><th>Mode</th><th>Display Name</th><th>SMTP / Brevo</th><th>Daily Limit</th><th>Sent Today</th><th>Remaining</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="oa-accounts-body"><tr><td colspan="9" style="color:var(--text-2);text-align:center;padding:24px">Loading…</td></tr></tbody></table>
+        </div>
+
+        <div style="font-size:11px;color:var(--text-3);margin-bottom:14px">
+          <strong>SMTP Password</strong> mode: each account has its own SMTP credentials. <strong>Brevo Relay</strong> mode: all agents share the Brevo SMTP key from Settings and send from your subdomain. If no accounts are added, the system falls back to the Legacy SMTP credentials above.
+        </div>
+
+        <!-- Pacing controls (apply globally) -->
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-2);margin-bottom:10px">Sending Pacing</div>
+        <div class="settings-grid">
+          <div class="setting-field"><label for="cfg-EMAIL_DELAY_SEC">Delay Between Emails (sec)</label><input type="number" id="cfg-EMAIL_DELAY_SEC" placeholder="20"></div>
+        </div>
+      </div>
+      <div class="card settings-section"><div class="settings-section-title">WhatsApp Channel</div><div class="settings-grid"><div class="setting-field"><label for="cfg-WHATSAPP_ACCOUNT_SID">Account SID</label><input type="password" id="cfg-WHATSAPP_ACCOUNT_SID"></div><div class="setting-field"><label for="cfg-WHATSAPP_AUTH_TOKEN">Auth Token</label><input type="password" id="cfg-WHATSAPP_AUTH_TOKEN"></div><div class="setting-field"><label for="cfg-WHATSAPP_PHONE_NUMBER">Phone Number</label><input type="text" id="cfg-WHATSAPP_PHONE_NUMBER"></div></div></div>
+      <div class="card settings-section">
+        <div class="settings-section-title">Brevo SMTP Relay</div>
+        <p style="font-size:12px;color:var(--text-2);margin-bottom:14px;line-height:1.6">
+          Configure Brevo (formerly Sendinblue) to send emails from your subdomain (e.g. <code style="font-size:11px;background:var(--surface);padding:1px 4px;border-radius:3px">agent@outreach.yourdomain.com</code>). All Brevo-relay agents share this single SMTP key. <button class="btn btn-outline btn-sm" onclick="testBrevo()" style="margin-left:8px">⚡ Test Connection</button>
+        </p>
+        <div class="settings-grid">
+          <div class="setting-field"><label for="cfg-BREVO_SMTP_LOGIN">SMTP Login <span style="font-weight:400;font-size:10px;color:var(--text-3)">(Brevo account email)</span></label><input type="text" id="cfg-BREVO_SMTP_LOGIN" placeholder="you@yourdomain.com"></div>
+          <div class="setting-field"><label for="cfg-BREVO_SMTP_KEY">SMTP Key <span style="font-weight:400;font-size:10px;color:var(--text-3)">(Brevo SMTP relay key)</span></label><input type="password" id="cfg-BREVO_SMTP_KEY"></div>
+          <div class="setting-field"><label for="cfg-BREVO_SMTP_HOST">SMTP Host</label><input type="text" id="cfg-BREVO_SMTP_HOST" placeholder="smtp-relay.brevo.com"></div>
+          <div class="setting-field"><label for="cfg-BREVO_SMTP_PORT">SMTP Port</label><input type="number" id="cfg-BREVO_SMTP_PORT" placeholder="587"></div>
+        </div>
+      </div>
+      <div class="card settings-section">
+        <div class="settings-section-title">Cloudflare Email Routing</div>
+        <p style="font-size:12px;color:var(--text-2);margin-bottom:14px;line-height:1.6">
+          When using Brevo Relay with Cloudflare Email Routing, all replies to <code style="font-size:11px;background:var(--surface);padding:1px 4px;border-radius:3px">*@outreach.yourdomain.com</code> are forwarded to a single Gmail inbox. Configure that inbox here — the reply scanner will use it instead of scanning each agent's inbox separately.
+        </p>
+        <div class="settings-grid">
+          <div class="setting-field"><label for="cfg-CENTRAL_INBOX_EMAIL">Central Inbox Email</label><input type="email" id="cfg-CENTRAL_INBOX_EMAIL" placeholder="replies@yourdomain.com"></div>
+          <div class="setting-field"><label for="cfg-CENTRAL_INBOX_PASSWORD">Central Inbox Password <span style="font-weight:400;font-size:10px;color:var(--text-3)">(Gmail app password)</span></label><input type="password" id="cfg-CENTRAL_INBOX_PASSWORD"></div>
+          <div class="setting-field"><label for="cfg-CENTRAL_INBOX_IMAP">IMAP Host</label><input type="text" id="cfg-CENTRAL_INBOX_IMAP" placeholder="imap.gmail.com"></div>
+        </div>
+      </div>
+      <div class="card settings-section"><div class="settings-section-title">Tracking & Infrastructure</div><div class="settings-grid"><div class="setting-field"><label for="cfg-TRACKING_DOMAIN">Tracking Domain</label><input type="text" id="cfg-TRACKING_DOMAIN" placeholder="http://localhost:8000"></div><div class="setting-field"><label for="cfg-BASE_URL">Base URL</label><input type="text" id="cfg-BASE_URL" placeholder="http://localhost:8000"></div><div class="setting-field"><label for="cfg-MAIL_DOMAINS">Mail Domains</label><input type="text" id="cfg-MAIL_DOMAINS"></div><div class="setting-field"><label for="cfg-SCRAPE_THREADS">Scrape Threads</label><input type="number" id="cfg-SCRAPE_THREADS"></div><div class="setting-field"><label for="cfg-DB_PATH">DB Path</label><input type="text" id="cfg-DB_PATH"></div><div class="setting-field"><label><input type="checkbox" id="cfg-USE_LEGACY_LEADGEN"> Use Legacy Leadgen</label></div><div class="setting-field"><label><input type="checkbox" id="cfg-WARMUP_ENABLED"> Warmup Enabled</label></div><div class="setting-field"><label for="cfg-POSTFIX_HOST">Postfix Host</label><input type="text" id="cfg-POSTFIX_HOST"></div><div class="setting-field"><label for="cfg-POSTFIX_PORT">Postfix Port</label><input type="number" id="cfg-POSTFIX_PORT"></div></div></div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<div id="modal-overlay" role="dialog" aria-modal="true" aria-label="Dialog" onclick="closeModal(event)"><div id="modal"><button class="modal-close" onclick="closeModal()">×</button><div id="modal-content"></div></div></div>
+
+<script>
+const S={page:'dashboard',leads:{data:[],total:0,offset:0,limit:100},sel:new Set(),waSel:new Set(),jobs:{},charts:{},wuLogsOffset:0,token:localStorage.getItem('token')||''};
+
+// Attach JWT, throw readable errors, tolerate non-JSON (204, empty).
+async function API(p, o){
+  o = o || {};
+  o.headers = Object.assign({}, o.headers || {});
+  if (S.token) o.headers['Authorization'] = 'Bearer ' + S.token;
+  const r = await fetch(p, o);
+  if (r.status === 401) {
+    Object.keys(S.jobs).forEach(k=>{try{S.jobs[k].close()}catch(e){}delete S.jobs[k]});
+    S.token = '';
+    try { localStorage.removeItem('token'); } catch(e){}
+    showLoginModal();
+    throw new Error('Authentication required');
+  }
+  if (r.status === 403) {
+    S.token = '';
+    try { localStorage.removeItem('token'); } catch(e){}
+    showLoginModal();
+    throw new Error('Authentication required');
+  }
+  if (!r.ok) {
+    let detail = '';
+    try { const j = await r.json(); detail = j.detail || j.error || ''; } catch(e){}
+    throw new Error(`HTTP ${r.status}${detail ? ' — ' + detail : ''}`);
+  }
+  if (r.status === 204) return null;
+  const text = await r.text();
+  if (!text) return null;
+  try { return JSON.parse(text); } catch(e){ return text; }
+}
+
+function showLoginModal(){
+  openModal(`
+    <h3 style="font-family:var(--cond);font-size:17px;margin-bottom:14px">Sign in</h3>
+    <div style="font-size:12px;color:var(--text-2);margin-bottom:14px">Enter your LeadPro credentials. Default: <strong>admin</strong> with the password printed at startup.</div>
+    <div class="form-row" style="margin-bottom:8px">
+      <div class="form-group" style="flex:1"><label for="login-username">Username</label><input type="text" id="login-username" value="admin" style="width:100%"></div>
+    </div>
+    <div class="form-row" style="margin-bottom:14px">
+      <div class="form-group" style="flex:1"><label for="login-password">Password</label><input type="password" id="login-password" style="width:100%" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    </div>
+    <div id="login-err" style="color:var(--danger);font-size:12px;margin-bottom:10px;display:none"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="doLogin()">Sign in</button>
+    </div>
+  `);
+  setTimeout(()=>{const el=document.getElementById('login-password');if(el)el.focus();},60);
+}
+
+async function doLogin(){
+  const u=document.getElementById('login-username').value.trim();
+  const p=document.getElementById('login-password').value;
+  const err=document.getElementById('login-err');
+  err.style.display='none';
+  try {
+    const r = await fetch('/api/auth/login',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({username:u,password:p}),
+    });
+    if (!r.ok) {
+      let msg='Invalid credentials';
+      try { const j=await r.json(); msg=j.detail||msg; } catch(e){}
+      err.textContent=msg; err.style.display='block'; return;
+    }
+    const data=await r.json();
+    S.token=data.access_token;
+    try { localStorage.setItem('token', S.token); } catch(e){}
+    closeModal();
+    testSmtp();
+    loadDash();
+  } catch(e){ err.textContent=e.message; err.style.display='block'; }
+}
+
+async function doLogout(){
+  S.token='';
+  try { localStorage.removeItem('token'); } catch(e){}
+  showLoginModal();
+}
+const TITLES={dashboard:'Dashboard',leadgen:'Lead Generation',campaigns:'Campaigns',leads:'Lead Database',intel:'Intelligence Engine',outreach:'Outreach Engine',replies:'Reply Monitor',analytics:'Conversion Analytics',warmup:'Email Warmup',settings:'Configuration'};
+
+// Theme management
+const themeToggle = document.getElementById('theme-toggle');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+const storedTheme = localStorage.getItem('theme') || 'dark';
+if (storedTheme === 'light') document.documentElement.classList.add('theme-light');
+updateThemeIcon();
+themeToggle.addEventListener('click', toggleTheme);
+
+function toggleTheme() {
+  const isLight = document.documentElement.classList.toggle('theme-light');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  updateThemeIcon();
+}
+
+function updateThemeIcon() {
+  const icon = themeToggle.querySelector('i');
+  // In light mode, offer to switch to dark (show moon icon)
+  // In dark mode, offer to switch to light (show sun icon)
+  if (document.documentElement.classList.contains('theme-light')) {
+    icon.className = 'fas fa-moon';
+    themeToggle.title = 'Switch to dark theme';
+  } else {
+    icon.className = 'fas fa-sun';
+    themeToggle.title = 'Switch to light theme';
+  }
+}
+
+function toggleAdvancedFilters(){
+  const el=document.getElementById('lg-advanced-filters');
+  const btn=document.getElementById('lg-advanced-toggle');
+  const open=el.style.display==='none'||el.style.display==='';
+  el.style.display=open?'block':'none';
+  btn.textContent=open?'Advanced Filters ▲':'Advanced Filters ▼';
+}
+
+document.querySelectorAll('.nav-item').forEach(el=>el.addEventListener('click',()=>nav(el.dataset.page)));
+async function nav(p){S.page=p;document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.page===p));document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById('page-'+p).classList.add('active');document.getElementById('page-title').textContent=TITLES[p]||p;
+if(p==='dashboard')loadDash();
+if(p==='campaigns')loadCamps();
+if(p==='leads'){await loadFilters();loadLeads(0)}
+if(p==='outreach'){loadOutCamps();switchOutTab('initial')}
+if(p==='settings')loadSettings();
+if(p==='analytics')loadAnalytics();
+if(p==='warmup'){loadWuAccts();switchWuTab('run')}
+if(p==='intel')loadIntelStats()}
+
+function updateClock(){document.getElementById('time-badge').textContent=new Date().toLocaleTimeString('en-GB')}setInterval(updateClock,1000);updateClock();
+async function testSmtp(){try{const r=await API('/api/smtp/test');const d=document.getElementById('smtp-dot');d.className=r.ok?'ok':'fail'}catch(e){console.error(e)}}
+
+// ── Dashboard ──
+async function loadDash(){try{const s=await API('/api/stats');$('s-total',fN(s.total_leads));$('s-hot',fN(s.high_score_leads));$('s-intent',fN(s.hot_intent||0));$('s-loss',fN(s.total_monthly_loss||0));$('s-emailed',fN(s.emailed));$('s-opened',fN(s.opened));$('s-open-rate',formatPercent(s.open_rate));$('s-replied',fN(s.replied));$('s-rate',formatPercent(s.reply_rate));$('s-bounced',fN(s.bounced));$('s-optout',fN(s.opted_out));$('total-badge',fN(s.total_leads)+' leads');renderSvcChart(s.by_service||[])}catch(e){console.error(e)}await loadActivity()}
+
+function renderSvcChart(d){const ctx=document.getElementById('service-chart').getContext('2d');if(S.charts.svc)S.charts.svc.destroy();S.charts.svc=new Chart(ctx,{type:'bar',data:{labels:d.map(x=>(x.ideal_service||'?').substring(0,18)),datasets:[{data:d.map(x=>x.n),backgroundColor:'rgba(14,165,233,0.2)',borderColor:'#0ea5e9',borderWidth:1,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8',font:{size:10},maxRotation:45},grid:{color:'#334155'}},y:{ticks:{color:'#94a3b8'},grid:{color:'#334155'}}}}})}
+
+async function loadActivity(){try{const d=await API('/api/activity?limit=15');const f=document.getElementById('activity-feed');if(!d.length){f.innerHTML='<div class="empty"><p>No activity.</p></div>';return}const ic={emailed:'<i class="fas fa-envelope"></i>',replied:'<i class="fas fa-reply"></i>',opted_out:'<i class="fas fa-ban"></i>',scraped:'<i class="fas fa-search"></i>',audit_viewed:'<i class="fas fa-chart-bar"></i>',lead_created:'<i class="fas fa-plus"></i>',campaign_created:'<i class="fas fa-rocket"></i>',intel_run:'<i class="fas fa-brain"></i>',audit_generated:'<i class="fas fa-file-alt"></i>',proposal_sent:'<i class="fas fa-paper-plane"></i>',bounced:'<i class="fas fa-mailbox"></i>',open:'<i class="fas fa-eye"></i>',click:'<i class="fas fa-link"></i>',status_changed:'<i class="fas fa-sync-alt"></i>',error:'<i class="fas fa-exclamation-circle"></i>'};f.innerHTML=d.map(a=>`<div class="activity-item"><div class="act-icon">${ic[a.event_type]||'<i class="fas fa-circle"></i>'}</div><div class="act-body"><div class="act-title">${esc(a.business_name||'?')} — ${esc(a.event_type)}</div><div class="act-meta">${esc(a.email||'')} · ${fD(a.created_at)}</div></div></div>`).join('')}catch(e){console.error(e)}}
+
+// ── Lead Gen ──
+async function startLeadGen(){
+  const c=document.getElementById('lg-country').value.trim();
+  const t=parseInt(document.getElementById('lg-target').value)||200;
+  if(!c){alert('Enter a target country.');return}
+
+  const industry=document.getElementById('lg-industry').value.trim()||null;
+  const business_type=document.getElementById('lg-business-type').value||null;
+  const city=document.getElementById('lg-city').value.trim()||null;
+  const mls=document.getElementById('lg-min-lead-score').value;
+  const mos=document.getElementById('lg-min-ops-score').value;
+  const mis=document.getElementById('lg-min-intent-score').value;
+  const min_lead_score=mls?parseInt(mls):null;
+  const min_ops_score=mos?parseInt(mos):null;
+  const min_intent_score=mis?parseInt(mis):null;
+  const exclude_competitors=document.getElementById('lg-exclude-competitors').checked;
+  const include_clean_leads=document.getElementById('lg-include-clean').checked;
+  const tech_stack_filters=Array.from(document.getElementById('lg-tech-stack-filters').selectedOptions).map(o=>o.value);
+  const source_selection=Array.from(document.getElementById('lg-source-selection').selectedOptions).map(o=>o.value);
+
+  const payload={country:c,target:t,industry,business_type,city,min_lead_score,min_ops_score,min_intent_score,
+    exclude_competitors,include_clean_leads,
+    tech_stack_filters:tech_stack_filters.length?tech_stack_filters:null,
+    source_selection:source_selection.length?source_selection:null};
+
+  document.getElementById('lg-btn').disabled=true;
+  document.getElementById('lg-stop').style.display='';
+  document.getElementById('lg-progress').classList.add('visible');
+  setProgress('lg-prog-fill','lg-prog-label','lg-prog-pct',0,t);
+  clearLog('terminal');
+  appendLog('terminal','info',`Country: ${c} | Target: ${t}`);
+  if(industry) appendLog('terminal','info',`Niche filter: ${industry}`);
+  if(business_type) appendLog('terminal','info',`Business type: ${business_type}`);
+  if(city) appendLog('terminal','info',`City: ${city}`);
+  if(min_lead_score!=null) appendLog('terminal','info',`Min lead score: ${min_lead_score}`);
+  if(min_ops_score!=null) appendLog('terminal','info',`Min ops score: ${min_ops_score}`);
+  if(min_intent_score!=null) appendLog('terminal','info',`Min intent score: ${min_intent_score}`);
+  if(exclude_competitors) appendLog('terminal','info','Excluding competitor businesses');
+  if(include_clean_leads) appendLog('terminal','info','Including leads with no gaps');
+  if(tech_stack_filters.length) appendLog('terminal','info',`Tech gap filters: ${tech_stack_filters.join(', ')}`);
+  if(source_selection.length) appendLog('terminal','info',`Sources: ${source_selection.join(', ')}`);
+  else appendLog('terminal','info','Sources: all');
+
+  try{
+    const{job_id}=await API('/api/leadgen/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(S.jobs.leadgen){S.jobs.leadgen.close();delete S.jobs.leadgen}
+    const es=new EventSource(`/api/leadgen/stream/${job_id}`);
+    S.jobs.leadgen=es;
+    es.onmessage=e=>{
+      const m=JSON.parse(e.data);
+      if(m.type==='done'){es.close();delete S.jobs.leadgen;document.getElementById('lg-btn').disabled=false;document.getElementById('lg-stop').style.display='none';document.getElementById('lg-progress').classList.remove('visible');loadDash();return}
+      appendLog('terminal',m.type,m.message);
+      if(m.type==='progress'&&m.count!=null)setProgress('lg-prog-fill','lg-prog-label','lg-prog-pct',m.count,t)
+    };
+    es.onerror=()=>{appendLog('terminal','error','Connection lost.');es.close();document.getElementById('lg-btn').disabled=false;document.getElementById('lg-stop').style.display='none'}
+  }catch(e){appendLog('terminal','error',e.message);document.getElementById('lg-btn').disabled=false;document.getElementById('lg-stop').style.display='none'}
+}
+
+// ── Campaigns ──
+async function loadCamps(){try{const d=await API('/api/campaigns');const b=document.getElementById('campaigns-body');if(!d.length){b.innerHTML='<tr><td colspan="7"><div class="empty"><p>No campaigns.</p></div></td></tr>';return}b.innerHTML=d.map(c=>`<tr><td><span class="badge badge-dim">#${c.id}</span></td><td><strong>${esc(c.name)}</strong></td><td>${esc(c.country||'—')}</td><td>${statusBadge(c.status)}</td><td style="font-family:var(--mono)">${fN(c.lead_count||0)}</td><td style="color:var(--text-2);font-size:12px">${fD(c.created_at)}</td><td><div style="display:flex;gap:4px"><button class="btn btn-outline btn-sm" onclick="pauseCamp(${c.id},'${c.status==='active'?'paused':'active'}')">${c.status==='active'?'<i class="fas fa-pause"></i>':'<i class="fas fa-play"></i>'}</button><button class="btn btn-sm" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#ef4444" onclick="deleteCampaign(${c.id})"><i class="fas fa-trash-alt"></i></button></div></td></tr>`).join('')}catch(e){console.error(e)}}
+function toggleNewCampaign(){const f=document.getElementById('new-campaign-form');f.style.display=f.style.display==='none'?'':'none';if(f.style.display!=='none')loadLeadBatches()}
+async function loadLeadBatches(){try{const d=await API('/api/lead-batches');const s=document.getElementById('nc-lead-batch');s.innerHTML='<option value="__all_unassigned__">All Unassigned Leads</option>'+d.map(b=>`<option value="${esc(b.batch)}">${esc(b.batch)} (${fN(b.count)} leads)</option>`).join('')}catch(e){document.getElementById('nc-lead-batch').innerHTML='<option value="">Error loading batches</option>'}}
+async function createCampaign(){try{const n=document.getElementById('nc-name').value.trim(),c=document.getElementById('nc-country').value.trim(),batch=document.getElementById('nc-lead-batch').value;if(!n||!c)return alert('Name + country required.');const body={name:n,country:c};if(batch)body.lead_batch=batch;await API('/api/campaigns',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});document.getElementById('nc-name').value='';document.getElementById('nc-country').value='';toggleNewCampaign();loadCamps()}catch(e){alert('Error: '+e.message)}}
+async function pauseCamp(id,s){try{await API(`/api/campaigns/${id}/status?status=${s}`,{method:'PATCH'});loadCamps()}catch(e){alert('Error: '+e.message)}}
+async function deleteCampaign(id) {
+    if (!confirm('Delete this campaign? Leads will be unassigned but outreach history kept.')) return;
+    try {
+        await API(`/api/campaigns/${id}`, { method: 'DELETE' });
+        loadCamps();
+    } catch(e) {
+        alert('Error: ' + e.message);
+    }
+}
+
+
+// ── Leads ──
+async function loadFilters(){try{const{countries,services}=await API('/api/leads/filters');const cs=document.getElementById('f-country'),ss=document.getElementById('f-service');const pc=cs.value,ps=ss.value;cs.innerHTML='<option value="">All Countries</option>'+countries.map(c=>`<option value="${esc(c)}"${c===pc?' selected':''}>${esc(c)}</option>`).join('');ss.innerHTML='<option value="">All Services</option>'+services.map(s=>`<option value="${esc(s)}"${s===ps?' selected':''}>${esc(s)}</option>`).join('')}catch(e){console.error(e)}}
+
+async function loadLeads(o){S.leads.offset=o;const ms=document.getElementById('f-score').value||0,co=document.getElementById('f-country').value,sv=document.getElementById('f-service').value,he=document.getElementById('f-email').value,so=document.getElementById('f-sort').value||'lead_score';const params={min_score:ms,country:co,service:sv,sort:so,limit:S.leads.limit,offset:o};if(he)params.has_email='true';const p=new URLSearchParams(params);try{const{leads,total}=await API('/api/leads?'+p);S.leads.data=leads;S.leads.total=total;$('leads-count-label',fN(total)+' leads');renderLeads(leads);renderPager('leads-pager',o,S.leads.limit,total,loadLeads)}catch(e){console.error(e)}}
+
+function renderLeads(leads){const b=document.getElementById('leads-body');if(!leads.length){b.innerHTML='<tr><td colspan="12"><div class="empty"><p>No leads.</p></div></td></tr>';return}
+b.innerHTML=leads.map(l=>{const pp=tryJ(l.pain_points,[]);const sc=l.lead_score>=70?'var(--success)':l.lead_score>=50?'var(--warning)':'var(--text-2)';const ic=l.intent_score>=60?'var(--success)':l.intent_score>=35?'var(--warning)':'var(--text-3)';const loss=l.estimated_monthly_loss||0;const dm=l.decision_maker;const ts=tryJ(l.tech_stack_json,null);const gaps=ts===null?null:Object.entries(ts).filter(([k,v])=>v&&v[0]==='none').map(([k])=>k.replace(/_/g,' ')).slice(0,3);
+return`<tr>
+<td><div class="score-badge" style="background:${sc}20;color:${sc};border:1px solid ${sc}40">${l.lead_score}</div></td>
+<td><div class="score-badge" style="background:${ic}20;color:${ic};border:1px solid ${ic}40">${l.intent_score||0}</div></td>
+<td style="font-family:var(--mono);font-size:12px;color:${loss>2000?'var(--danger)':loss>500?'var(--warning)':'var(--text-2)'}">$${loss.toLocaleString()}</td>
+<td><strong style="font-size:13px">${esc(l.business_name)}</strong></td>
+<td style="font-size:12px">${dm?'<span style="color:var(--accent)">'+esc(dm)+'</span>':'<span style="color:var(--text-3)">—</span>'}</td>
+<td style="font-family:var(--mono);font-size:11px;color:var(--text-2)">${esc(l.email||'—')}</td>
+<td style="font-family:var(--mono);font-size:11px;color:var(--text-2)">${esc(l.phone||'—')}</td>
+<td style="font-family:var(--mono);font-size:11px;color:var(--text-2)">${esc([l.city, l.country].filter(Boolean).join(', ') || '—')}</td>
+<td><span class="badge badge-accent" style="font-size:10px">${esc(l.ideal_service||'—')}</span></td>
+<td><div class="pain-list">${pp.slice(0,2).map(p=>'<span class="pain-tag">'+esc(p)+'</span>').join('')}</div></td>
+<td style="font-size:11px">${ts===null?'<span style="color:var(--text-3)">?</span>':gaps.length?'<span style="color:var(--danger)"><i class="fas fa-times"></i> '+esc(gaps.join(', '))+'</span>':'<span style="color:var(--success)"><i class="fas fa-check"></i></span>'}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-outline btn-sm" data-id="${l.id}" data-name="${esc(l.business_name)}" onclick="previewEmailModal(this.dataset.id, this.dataset.name)" title="Preview email"><i class="fas fa-envelope"></i></button>
+        <button class="btn btn-outline btn-sm" onclick="genAuditPage(${l.id}, this)" title="Generate audit page"><i class="fas fa-chart-bar"></i></button>
+        ${l.phone && l.phone !== 'N/A' && l.phone !== '' ? `<button class="btn btn-outline btn-sm" onclick="quickGenWa(${l.id},this)" title="Generate WhatsApp message"><i class="fas fa-comment-dots"></i></button>` : ''}
+      </td>
+</tr>`}).join('')}
+
+async function previewEmailModal(id,n){
+  openModal(`<h3 style="font-family:var(--cond);font-size:17px;margin-bottom:14px">Email Preview — ${esc(n)}</h3><div style="font-size:12px;color:var(--text-2);font-family:var(--mono)">Generating…</div>`);
+  try{
+    const r=await API(`/api/leads/${id}/preview-email`);
+    if(r.error){document.getElementById('modal-content').innerHTML=`<div style="color:var(--danger)">${esc(r.error)}</div>`;return}
+    _modalCopyText=(r.subject?'Subject: '+r.subject+'\n\n':'')+r.body;
+    document.getElementById('modal-content').innerHTML=`
+      <h3 style="font-family:var(--cond);font-size:17px;margin-bottom:14px">Email Preview — ${esc(n)}</h3>
+      <div style="font-size:11px;color:var(--text-2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">Subject</div>
+      <div class="modal-subject">${esc(r.subject||'—')}</div>
+      <div style="font-size:11px;color:var(--text-2);text-transform:uppercase;letter-spacing:.6px;margin:12px 0 4px">Body</div>
+      <div class="modal-body">${esc(r.body||'—')}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <span style="font-size:11px;color:var(--text-3);font-family:var(--mono)">Model: ${esc(r.model_used||'—')}</span>
+        <button class="btn btn-outline btn-sm" onclick="copyModalText(this)">Copy</button>
+      </div>`;
+  }catch(e){document.getElementById('modal-content').innerHTML=`<div style="color:var(--danger)">${esc(e.message)}</div>`}
+}
+
+async function genAuditPage(id, btn){const originalHTML=btn?.innerHTML;if(btn){btn.disabled=true;btn.innerHTML='<i class="fas fa-sync-alt fa-spin"></i>'};const w=window.open('','_blank');try{const r=await API('/api/leads/'+id+'/audit-page',{method:'POST'});if(r.url)w.location.href=r.url;else w.close()}catch(e){w.close();alert('Error: '+e.message)}finally{if(btn){btn.disabled=false;btn.innerHTML=originalHTML}}}
+
+async function quickGenWa(id, btn){
+  const originalHTML=btn?.innerHTML;
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="fas fa-sync-alt fa-spin"></i>'}
+  try{
+    const r=await API('/api/whatsapp/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lead_id:id})});
+    _modalCopyText=r.message||'';
+    const phone=r.phone?r.phone.replace(/\D/g,''):'';
+    openModal(`<h3 style="font-family:var(--cond);font-size:17px;margin-bottom:4px">WhatsApp Message</h3>
+      <div style="font-size:12px;color:var(--text-2);margin-bottom:14px">${esc(r.business_name)}${r.phone?' · '+esc(r.phone):''}</div>
+      <div style="font-size:13px;line-height:1.7;white-space:pre-wrap;background:var(--surface);padding:14px;border-radius:6px;border:1px solid var(--border)">${esc(r.message)}</div>
+      <div style="margin-top:14px;display:flex;gap:8px">
+        <button class="btn btn-outline btn-sm" onclick="copyModalText(this)">Copy</button>
+        ${phone?`<a href="https://wa.me/${phone}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm" style="text-decoration:none">Open in WhatsApp</a>`:''}
+      </div>`);
+  }catch(e){alert('WhatsApp generation failed: '+e.message)}
+  finally{if(btn){btn.disabled=false;btn.innerHTML=originalHTML}}
+}
+async function exportLeads(btn){
+  const originalHTML=btn?.innerHTML;
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="fas fa-sync-alt fa-spin"></i> Exporting…'}
+  try{
+    const minScore=document.getElementById('f-score').value||0;
+    const country=document.getElementById('f-country').value||'';
+    const service=document.getElementById('f-service').value||'';
+    const sort=document.getElementById('f-sort').value||'lead_score';
+    const params=new URLSearchParams({limit:10000,min_score:minScore,country,service,sort});
+    const headers={};
+    if (S.token) headers['Authorization']='Bearer '+S.token;
+    const resp=await fetch('/api/leads?'+params,{headers});
+    if(resp.status===401||resp.status===403){showLoginModal();return;}
+    if(!resp.ok)throw new Error(`Export failed: ${resp.status}`);
+    const data=await resp.json();
+    const rows=data.leads||[];
+    if(!rows.length){alert('No leads to export.');return}
+    const cols=['id','business_name','email','phone','website','city','country','lead_score','ops_score','intent_score','estimated_monthly_loss','decision_maker','ideal_service','rating','review_count'];
+    const csv=[cols.join(','),...rows.map(r=>cols.map(c=>{const v=r[c]??'';return'"'+String(v).replace(/"/g,'""')+'"'}).join(','))].join('\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`leads_${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
+  }catch(e){alert('Export error: '+e.message)}
+  finally{if(btn){btn.disabled=false;btn.innerHTML=originalHTML||'Export'}}
+}
+
+// ── Intelligence ──
+async function loadIntelStats(){try{const a=await API('/api/analytics');const s=a.seo_overview||{};$('seo-tracked',fN(s.tracked||0));$('seo-p1',fN(s.page_one||0));$('seo-miss',fN(s.not_ranking||0));$('seo-avg',s.avg_pos||'—')}catch(e){console.error(e)}}
+
+async function startIntel(){
+    const m=document.getElementById('intel-min').value||50;
+    const country=document.getElementById('intel-country').value.trim()||null;
+    const service=document.getElementById('intel-service').value.trim()||null;
+    document.getElementById('intel-btn').disabled=true;
+    document.getElementById('intel-stop').style.display='';
+    document.getElementById('intel-progress').classList.add('visible');
+    clearLog('intel-terminal');
+    appendLog('intel-terminal','info','Starting intelligence run…');
+    try{
+        const body={min_score:+m};
+        if(country) body.country=country;
+        if(service) body.service=service;
+        const{job_id}=await API('/api/intel/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+        if(S.jobs.intel){S.jobs.intel.close();delete S.jobs.intel}
+        const es=new EventSource(`/api/intel/stream/${job_id}`);
+        S.jobs.intel=es;
+        es.onmessage=e=>{
+            const msg=JSON.parse(e.data);
+            if(msg.type==='done'){
+                es.close();
+                delete S.jobs.intel;
+                document.getElementById('intel-btn').disabled=false;
+                document.getElementById('intel-stop').style.display='none';
+                document.getElementById('intel-progress').classList.remove('visible');
+                loadIntelStats();
+                return
+            }
+            appendLog('intel-terminal',msg.type,msg.message);
+            if(msg.progress!=null){
+                const pct=msg.progress;
+                document.getElementById('intel-prog-fill').style.width=pct+'%';
+                document.getElementById('intel-prog-pct').textContent=pct+'%';
+                if(msg.count!=null&&msg.total!=null)document.getElementById('intel-prog-label').textContent=msg.count+' / '+msg.total
+            }
+        };
+        es.onerror=()=>{
+            es.close();
+            document.getElementById('intel-btn').disabled=false;
+            document.getElementById('intel-stop').style.display='none';
+            document.getElementById('intel-progress').classList.remove('visible')
+        }
+    }catch(e){
+        appendLog('intel-terminal','error',e.message);
+        document.getElementById('intel-btn').disabled=false;
+        document.getElementById('intel-stop').style.display='none'
+    }
+}
+
+async function genProposal(){const id=document.getElementById('prop-id').value;if(!id)return alert('Enter lead ID');const el=document.getElementById('prop-status');el.textContent='Generating PDF…';try{const r=await API(`/api/proposals/generate/${id}`,{method:'POST'});el.innerHTML=`<i class="fas fa-check"></i> <a href="/api/proposals/${id}/download?token=${encodeURIComponent(S.token)}" target="_blank" rel="noopener noreferrer">${esc(r.path)}</a>`}catch(e){el.innerHTML='<i class="fas fa-times"></i> '+e.message}}
+async function genAuditPageById(btn){const id=document.getElementById('prop-id').value;if(!id)return alert('Enter lead ID');const el=document.getElementById('prop-status');el.textContent='Generating audit page…';const originalHTML=btn?.innerHTML;const originalDisabled=btn?.disabled;if(btn){btn.disabled=true;btn.innerHTML='<i class="fas fa-sync-alt fa-spin"></i>'};try{const r=await API(`/api/leads/${id}/audit-page`,{method:'POST'});const safeUrl=r.url;el.innerHTML=`<i class="fas fa-check"></i> <a href="${encodeURI(safeUrl)}" target="_blank" rel="noopener noreferrer">Open audit page</a>`}catch(e){el.innerHTML=`<i class="fas fa-times"></i> ${esc(e.message)}`}finally{if(btn){btn.disabled=originalDisabled;btn.innerHTML=originalHTML}}}
+async function batchProposals(){const el=document.getElementById('prop-status');el.textContent='Generating batch…';try{const r=await API('/api/proposals/batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({min_score:60,limit:20})});el.innerHTML=`<i class="fas fa-check"></i> Generated ${r.generated} proposals.`}catch(e){el.innerHTML=`<i class="fas fa-times"></i> ${esc(e.message)}`}}
+async function cleanupAuditPages(btn){const originalHTML=btn?.innerHTML;const originalDisabled=btn?.disabled;if(btn){btn.disabled=true;btn.innerHTML='<i class="fas fa-sync-alt fa-spin"></i>'};const el=document.getElementById('prop-status');el.textContent='Cleaning up expired audit pages…';try{const r=await API('/api/audit/cleanup',{method:'POST'});el.innerHTML=`<i class="fas fa-check"></i> ${esc(r.message)}`}catch(e){el.innerHTML=`<i class="fas fa-times"></i> ${esc(e.message)}`}finally{if(btn){btn.disabled=originalDisabled;btn.innerHTML=originalHTML}}}
+
+// Store AI text for copying from modal
+let _modalCopyText = '';
+function copyModalText(btn){
+  navigator.clipboard.writeText(_modalCopyText).then(()=>{btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500)}).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=_modalCopyText;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500);
+  });
+}
+
+async function genExecSummary(){
+  const id=document.getElementById('prop-id').value;
+  if(!id)return alert('Enter a lead ID first.');
+  const el=document.getElementById('prop-status');
+  el.textContent='Generating executive summary…';
+  try{
+    const r=await API(`/api/leads/${id}/executive-summary`,{method:'POST'});
+    _modalCopyText=r.summary||'';
+    openModal(`<h3 style="font-family:var(--cond);font-size:17px;margin-bottom:14px">Executive Summary — ${esc(r.business_name)}</h3>
+      <div style="font-size:13px;line-height:1.75;white-space:pre-wrap;color:var(--text);background:var(--surface);padding:14px;border-radius:6px;border:1px solid var(--border);max-height:60vh;overflow-y:auto">${esc(r.summary)}</div>
+      <div style="margin-top:14px"><button class="btn btn-outline btn-sm" onclick="copyModalText(this)">Copy</button></div>`);
+    el.textContent='';
+  }catch(e){el.textContent='Error: '+e.message}
+}
+
+async function genRecommendations(){
+  const id=document.getElementById('prop-id').value;
+  if(!id)return alert('Enter a lead ID first.');
+  const el=document.getElementById('prop-status');
+  el.textContent='Generating recommendations…';
+  try{
+    const r=await API(`/api/leads/${id}/recommendations`,{method:'POST'});
+    _modalCopyText=r.recommendations||'';
+    openModal(`<h3 style="font-family:var(--cond);font-size:17px;margin-bottom:14px">Recommendations — ${esc(r.business_name)}</h3>
+      <div style="font-size:13px;line-height:1.75;white-space:pre-wrap;color:var(--text);background:var(--surface);padding:14px;border-radius:6px;border:1px solid var(--border);max-height:60vh;overflow-y:auto">${esc(r.recommendations)}</div>
+      <div style="margin-top:14px"><button class="btn btn-outline btn-sm" onclick="copyModalText(this)">Copy</button></div>`);
+    el.textContent='';
+  }catch(e){el.textContent='Error: '+e.message}
+}
+
+// ── Outreach ──
+async function loadOutCamps(){try{const c=await API('/api/campaigns');document.getElementById('out-campaign').innerHTML='<option value="">Select…</option>'+c.filter(x=>x.status==='active').map(x=>`<option value="${x.id}">${esc(x.name)} (${esc(x.country)})</option>`).join('')}catch(e){console.error(e)}}
+
+async function previewOutreach(){const c=document.getElementById('out-campaign').value,m=document.getElementById('out-min-score').value||40;if(!c)return alert('Select campaign.');try{const d=await API(`/api/outreach/preview/${c}?min_score=${m}`);S.sel=new Set();document.getElementById('out-preview-wrap').style.display='';$('out-preview-label',d.filter(l=>!l._skipped).length+' leads ready');
+document.getElementById('out-preview-body').innerHTML=d.map(l=>{const loss=l.estimated_monthly_loss||0;const dm=l.decision_maker;return`<tr style="opacity:${l._skipped ? 0.4 : 1}"><td><input type="checkbox" class="lead-cb" value="${l.id}" ${l._skipped?'disabled':''} onchange="toggleLead(${l.id},this)"></td><td><div class="score-badge" style="background:var(--border);color:var(--text)">${l.lead_score}</div></td><td style="font-family:var(--mono);font-size:12px;color:${loss>1000?'var(--danger)':'var(--text-2)'}">$${loss.toLocaleString()}</td><td>${esc(l.business_name)}${l._skipped?' <span style="font-size:10px;color:var(--danger)">[skip]</span>':''}</td><td style="font-size:12px;color:var(--accent)">${esc(dm||'—')}</td><td style="font-family:var(--mono);font-size:11px;color:var(--text-2)">${esc(l.email||'—')}</td><td><button class="btn btn-outline btn-sm" data-id="${l.id}" data-name="${esc(l.business_name)}" onclick="previewEmailModal(this.dataset.id, this.dataset.name)">✉</button></td></tr>`}).join('');
+document.getElementById('out-send-btn').disabled=false}catch(e){alert('Error: '+e.message)}}
+function toggleLead(id,cb){cb.checked?S.sel.add(id):S.sel.delete(id)}
+function selectAllLeads(){document.querySelectorAll('.lead-cb:not(:disabled)').forEach(cb=>{cb.checked=true;S.sel.add(+cb.value)})}
+function clearLeadSelection(){document.querySelectorAll('.lead-cb').forEach(cb=>{cb.checked=false});S.sel.clear()}
+function toggleAllLeads(m){document.querySelectorAll('.lead-cb:not(:disabled)').forEach(cb=>{cb.checked=m.checked;m.checked?S.sel.add(+cb.value):S.sel.delete(+cb.value)})}
+
+async function startOutreach(){const c=document.getElementById('out-campaign').value,m=document.getElementById('out-min-score').value||40;if(!c)return alert('Select campaign.');document.getElementById('out-send-btn').disabled=true;document.getElementById('out-stop-btn').style.display='';clearLog('out-terminal');appendLog('out-terminal','info','Starting…');try{const{job_id}=await API('/api/outreach/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({campaign_id:+c,min_score:+m,lead_ids:S.sel.size?[...S.sel]:[]})});if(S.jobs.outreach){S.jobs.outreach.close();delete S.jobs.outreach}const es=new EventSource(`/api/outreach/stream/${job_id}`);S.jobs.outreach=es;es.onmessage=e=>{const msg=JSON.parse(e.data);if(msg.type==='done'){es.close();delete S.jobs.outreach;document.getElementById('out-stop-btn').style.display='none';document.getElementById('out-send-btn').disabled=false;loadDash();return}appendLog('out-terminal',msg.type,msg.message)};es.onerror=()=>{es.close();document.getElementById('out-stop-btn').style.display='none';document.getElementById('out-send-btn').disabled=false}}catch(e){appendLog('out-terminal','error',e.message);document.getElementById('out-stop-btn').style.display='none';document.getElementById('out-send-btn').disabled=false}}
+
+async function startFollowups(){clearLog('fu-terminal');appendLog('fu-terminal','info','Starting…');try{const{job_id}=await API('/api/followups/start',{method:'POST'});if(S.jobs.followups){S.jobs.followups.close();delete S.jobs.followups}const es=new EventSource(`/api/outreach/stream/${job_id}`);S.jobs.followups=es;es.onmessage=e=>{const m=JSON.parse(e.data);if(m.type==='done'){es.close();delete S.jobs.followups;return}appendLog('fu-terminal',m.type,m.message)};es.onerror=()=>{es.close();delete S.jobs.followups}}catch(e){appendLog('fu-terminal','error',e.message)}}
+function switchOutTab(t){
+  document.querySelectorAll('.out-tab[data-tab]').forEach(x=>{
+    const a=x.dataset.tab===t;
+    x.style.color=a?'var(--accent)':'var(--text-2)';
+    x.style.borderBottomColor=a?'var(--accent)':'transparent';
+    x.style.borderBottom=a?'2px solid var(--accent)':'2px solid transparent';
+  });
+  document.getElementById('out-tab-initial').style.display=t==='initial'?'':'none';
+  document.getElementById('out-tab-followup').style.display=t==='followup'?'':'none';
+  document.getElementById('out-tab-whatsapp').style.display=t==='whatsapp'?'':'none';
+  if(t==='whatsapp')loadWaLeads();
+}
+
+// ── Replies ──
+async function startReplyScan(){clearLog('rep-terminal');appendLog('rep-terminal','info','Connecting…');try{const{job_id}=await API('/api/replies/scan',{method:'POST'});if(S.jobs.replyScan){S.jobs.replyScan.close();delete S.jobs.replyScan}const es=new EventSource(`/api/replies/stream/${job_id}`);S.jobs.replyScan=es;es.onmessage=e=>{const m=JSON.parse(e.data);if(m.type==='done'){es.close();delete S.jobs.replyScan;return}appendLog('rep-terminal',m.type,m.message);if(m.type==='stats'&&m.data){const d=m.data;$('rep-scanned',d.scanned??'—');$('rep-replies',d.replies??'—');$('rep-optouts',d.opt_outs??'—');$('rep-errors',d.errors??'—');loadDash()}};es.onerror=()=>{es.close();delete S.jobs.replyScan}}catch(e){appendLog('rep-terminal','error',e.message)}}
+
+// ── Analytics ──
+async function loadAnalytics(){try{const a=await API('/api/analytics');
+const fc=document.getElementById('funnel-container');const fn=a.funnel||{};const mx=Math.max(fn.total||1,1);
+const steps=[{l:'Leads',v:fn.total||0,c:'var(--accent)'},{l:'Emailed',v:fn.emailed||0,c:'var(--accent)'},{l:'Opened',v:fn.opened||0,c:'var(--warning)'},{l:'Replied',v:fn.replied||0,c:'var(--success)'},{l:'Proposal',v:fn.proposal_sent||0,c:'#a855f7'}];
+fc.innerHTML=steps.map(s=>`<div class="funnel-bar"><span class="funnel-label">${s.l}</span><div class="funnel-fill" style="width:${Math.max(s.v/mx*100,2)}%;background:${s.c}"></div><span class="funnel-val" style="color:${s.c}">${fN(s.v)}</span></div>`).join('');
+
+document.getElementById('camp-perf-body').innerHTML=(a.campaign_perf||[]).map(c=>`<tr><td>${esc(c.campaign_name||'—')}</td><td>${fN(c.contacted)}</td><td>${fN(c.opens)}</td><td>${fN(c.replies)}</td><td>${fN(c.proposals)}</td></tr>`).join('')||'<tr><td colspan="5" style="color:var(--text-2);text-align:center">No data</td></tr>';
+document.getElementById('qry-perf-body').innerHTML=(a.query_perf||[]).slice(0,15).map(q=>`<tr><td style="font-size:12px">${esc((q.source_query||'').substring(0,40))}</td><td>${fN(q.leads_found)}</td><td>${q.avg_score||'—'}</td><td>${fN(q.replies)}</td></tr>`).join('')||'<tr><td colspan="4" style="color:var(--text-2);text-align:center">No data</td></tr>';
+if(a.bounce_stats){const bs=a.bounce_stats;document.getElementById('bounce-stats-body').innerHTML=[{t:'Total',v:bs.total||0},{t:'Hard',v:bs.hard||0},{t:'Soft',v:bs.soft||0}].map(r=>`<tr><td>${r.t}</td><td>${fN(r.v)}</td></tr>`).join('')||'<tr><td colspan="2">No data</td></tr>';}
+
+const vd=a.daily_volume||[];const vctx=document.getElementById('vol-chart').getContext('2d');if(S.charts.vol)S.charts.vol.destroy();
+S.charts.vol=new Chart(vctx,{type:'line',data:{labels:vd.map(d=>d.day),datasets:[{label:'Sent',data:vd.map(d=>d.sent),borderColor:'#0ea5e9',backgroundColor:'rgba(0,200,255,.1)',fill:true,tension:.3},{label:'Opened',data:vd.map(d=>d.opened),borderColor:'#ffd600',tension:.3},{label:'Replied',data:vd.map(d=>d.replied),borderColor:'#00e676',tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}}},scales:{x:{ticks:{color:'#94a3b8',font:{size:10}},grid:{color:'#334155'}},y:{ticks:{color:'#94a3b8'},grid:{color:'#334155'}}}}});
+
+const sp=a.service_perf||[];const sctx=document.getElementById('svc-reply-chart').getContext('2d');if(S.charts.svcR)S.charts.svcR.destroy();
+S.charts.svcR=new Chart(sctx,{type:'bar',data:{labels:sp.map(s=>(s.service||'?').substring(0,16)),datasets:[{label:'Contacted',data:sp.map(s=>s.contacted),backgroundColor:'rgba(14,165,233,0.2)',borderColor:'#0ea5e9',borderWidth:1},{label:'Replies',data:sp.map(s=>s.replies),backgroundColor:'#00e67633',borderColor:'#00e676',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}}},scales:{x:{ticks:{color:'#94a3b8',font:{size:10},maxRotation:45},grid:{color:'#334155'}},y:{ticks:{color:'#94a3b8'},grid:{color:'#334155'}}}}});
+
+const se=a.seo_overview||{};$('seo-tracked',fN(se.tracked||0));$('seo-p1',fN(se.page_one||0));$('seo-miss',fN(se.not_ranking||0));$('seo-avg',se.avg_pos||'—')}catch(e){console.error(e)}}
+
+// ── Warmup ──
+async function loadWuAccts(){
+  try{
+    const d=await API('/api/warmup/accounts');
+    const b=document.getElementById('wu-accounts-body');
+    // Show Brevo notice if Brevo SMTP login is configured
+    const brevoNotice=document.getElementById('wu-brevo-notice');
+    try{
+      const cfg=await API('/api/config');
+      if(brevoNotice)brevoNotice.style.display=cfg.BREVO_SMTP_LOGIN?'':'none';
+    }catch(e){if(brevoNotice)brevoNotice.style.display='none';}
+    if(!d.length){b.innerHTML='<tr><td colspan="7" style="color:var(--text-2);text-align:center;padding:24px">No accounts. Add a sender and at least one receiver to start warming up.</td></tr>';return}
+    b.innerHTML=d.map(a=>{
+      const promoteBtn=a.role==='sender'&&a.status==='ready'
+        ?`<button class="btn btn-success btn-sm" onclick="promoteWuAcct(${a.id})" title="Promote to Outreach Account" style="font-size:10px">↑ Promote</button>`
+        :'';
+      return `<tr>
+      <td style="font-family:var(--mono);font-size:12px">${esc(a.email)}</td>
+      <td>${esc(a.domain)}</td>
+      <td><span class="badge ${a.role==='sender'?'badge-accent':'badge-dim'}">${a.role}</span></td>
+      <td style="font-family:var(--mono)">${a.current_day||0}/28</td>
+      <td style="font-family:var(--mono)">${a.daily_limit||0}</td>
+      <td><span class="badge ${a.status==='ready'?'badge-green':a.status==='warming'?'badge-warn':'badge-dim'}">${a.status}</span></td>
+      <td style="white-space:nowrap">
+        ${promoteBtn}
+        <button class="btn btn-outline btn-sm" onclick="editWuAcct(${a.id})" title="Edit settings">⚙</button>
+        <button class="btn btn-outline btn-sm" onclick="testWuAccountById(${a.id})" title="Test SMTP">⚡</button>
+        <button class="btn btn-outline btn-sm" onclick="checkPlacementById(${a.id})" title="Check placement">📊</button>
+        <button class="btn btn-outline btn-sm" onclick="rescueById(${a.id})" title="Rescue from spam">🛟</button>
+        <button class="btn btn-danger btn-sm" onclick="delWuAcct(${a.id})" title="Delete">✗</button>
+      </td>
+    </tr>`}).join('')
+  }catch(e){console.error(e)}
+}
+
+async function editWuAcct(id){
+  openModal(`<h3 style="font-family:var(--cond);font-size:17px;margin-bottom:14px">Edit Warmup Account</h3><div>Loading…</div>`);
+  try{
+    const a=await API('/api/warmup/accounts/'+id);
+    document.getElementById('modal-content').innerHTML=`
+      <h3 style="font-family:var(--cond);font-size:17px;margin-bottom:4px">Edit — ${esc(a.email)}</h3>
+      <div style="font-size:12px;color:var(--text-2);margin-bottom:16px">Update SMTP/IMAP credentials and warmup settings</div>
+      <div class="form-row">
+        <div class="form-group"><label for="wu-edit-smtp-host">SMTP Host</label><input type="text" id="wu-edit-smtp-host" value="${esc(a.smtp_host||'smtp.gmail.com')}" style="width:180px"></div>
+        <div class="form-group"><label for="wu-edit-smtp-port">SMTP Port</label><input type="number" id="wu-edit-smtp-port" value="${a.smtp_port||587}" style="width:90px"></div>
+        <div class="form-group"><label for="wu-edit-imap-host">IMAP Host</label><input type="text" id="wu-edit-imap-host" value="${esc(a.imap_host||'imap.gmail.com')}" style="width:180px"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="wu-edit-daily-limit">Daily Limit</label><input type="number" id="wu-edit-daily-limit" value="${a.daily_limit||10}" style="width:90px"></div>
+        <div class="form-group"><label for="wu-edit-status">Status</label>
+          <select id="wu-edit-status">
+            <option value="warming" ${a.status==='warming'?'selected':''}>Warming</option>
+            <option value="ready" ${a.status==='ready'?'selected':''}>Ready</option>
+            <option value="paused" ${a.status==='paused'?'selected':''}>Paused</option>
+          </select>
+        </div>
+        <div class="form-group"><label for="wu-edit-day">Reset Day Counter</label>
+          <select id="wu-edit-day">
+            <option value="">Keep current (Day ${a.current_day||0})</option>
+            <option value="0">Reset to Day 0</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:8px">
+        <button class="btn btn-primary" onclick="saveWuEdit(${a.id})">💾 Save</button>
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      </div>`;
+  }catch(e){document.getElementById('modal-content').innerHTML+=`<div style="color:var(--danger);margin-top:8px">${e.message}</div>`}
+}
+
+async function saveWuEdit(id){
+  const smtp_host=document.getElementById('wu-edit-smtp-host').value.trim();
+  const smtp_port=parseInt(document.getElementById('wu-edit-smtp-port').value);
+  const imap_host=document.getElementById('wu-edit-imap-host').value.trim();
+  const daily_limit=parseInt(document.getElementById('wu-edit-daily-limit').value);
+  const status=document.getElementById('wu-edit-status').value;
+  const dayReset=document.getElementById('wu-edit-day').value;
+  const payload={smtp_host,smtp_port,imap_host,daily_limit,status};
+  if(dayReset==='0')payload.current_day=0;
+  try{
+    await API('/api/warmup/accounts/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    closeModal();loadWuAccts();appendLog('warmup-terminal','success','Account updated successfully.');
+  }catch(e){alert('Update failed: '+e.message)}
+}
+
+async function addWarmupAcct(){
+  const email=document.getElementById('wu-email').value.trim();
+  const password=document.getElementById('wu-pass').value;
+  const domain=document.getElementById('wu-domain').value.trim();
+  const role=document.getElementById('wu-role').value;
+  const smtp_host=document.getElementById('wu-smtp-host').value.trim()||'smtp.gmail.com';
+  const smtp_port=parseInt(document.getElementById('wu-smtp-port').value)||587;
+  const imap_host=document.getElementById('wu-imap-host').value.trim()||'imap.gmail.com';
+  if(!email||!password||!domain)return alert('Email, password, and domain are required.');
+  try{
+    await API('/api/warmup/accounts',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password,domain,role,smtp_host,smtp_port,imap_host})});
+    document.getElementById('wu-email').value='';
+    document.getElementById('wu-pass').value='';
+    document.getElementById('wu-domain').value='';
+    document.getElementById('wu-smtp-host').value='';
+    document.getElementById('wu-imap-host').value='';
+    appendLog('warmup-terminal','success',`Added ${role} account: ${email}`);
+    loadWuAccts();
+  }catch(e){alert('Failed to add account: '+e.message)}
+}
+
+async function delWuAcct(id){
+  if(!confirm('Remove this warmup account?'))return;
+  try{await API(`/api/warmup/accounts/${id}`,{method:'DELETE'});loadWuAccts()}catch(e){alert(e.message)}
+}
+
+async function promoteWuAcct(id){
+  if(!confirm('Promote this warmed-up account to an Outreach Account? It will be added with SMTP Password mode using its current credentials.'))return;
+  try{
+    const a=await API('/api/warmup/accounts/'+id);
+    await API('/api/outreach-accounts',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        email:a.email,
+        password:a.password||'',
+        smtp_host:a.smtp_host||'smtp.gmail.com',
+        smtp_port:a.smtp_port||587,
+        imap_host:a.imap_host||'imap.gmail.com',
+        display_name:a.email.split('@')[0],
+        daily_limit:a.daily_limit||150,
+        sending_mode:'smtp_password'
+      })});
+    appendLog('warmup-terminal','success','Promoted '+a.email+' to Outreach Account');
+    loadWuAccts();
+  }catch(e){alert('Promote failed: '+e.message)}
+}
+
+async function runWarmup(){
+  clearLog('warmup-terminal');
+  appendLog('warmup-terminal','info','Starting warmup cycle…');
+  switchWuTab('run');
+  try{
+    const{job_id}=await API('/api/warmup/run',{method:'POST'});
+    if(S.jobs.warmup){S.jobs.warmup.close();delete S.jobs.warmup}
+    const es=new EventSource(`/api/warmup/stream/${job_id}`);
+    S.jobs.warmup=es;
+    es.onmessage=e=>{
+      const m=JSON.parse(e.data);
+      if(m.type==='done'){es.close();loadWuAccts();appendLog('warmup-terminal','success','Cycle complete.');return}
+      appendLog('warmup-terminal',m.type,m.message)
+    };
+    es.onerror=()=>{es.close();appendLog('warmup-terminal','warning','Connection closed.')}
+  }catch(e){appendLog('warmup-terminal','error',e.message)}
+}
+
+function switchWuTab(t){
+  document.querySelectorAll('.out-tab[data-wu-tab]').forEach(x=>{const a=x.dataset.wuTab===t;x.style.color=a?'var(--accent)':'var(--text-2)';x.style.borderBottomColor=a?'var(--accent)':'transparent'});
+  document.getElementById('wu-tab-run').style.display=t==='run'?'':'none';
+  document.getElementById('wu-tab-placement').style.display=t==='placement'?'':'none';
+  document.getElementById('wu-tab-logs').style.display=t==='logs'?'':'none';
+  if(t==='placement')loadWarmupPlacement();
+  if(t==='logs')loadWarmupLogs();
+}
+
+async function loadWarmupPlacement(){
+  switchWuTab('placement');
+  try{
+    const r=await API('/api/warmup/placement-summary');
+    document.getElementById('wu-total-sent').textContent=fN(r.total_sent||0);
+    document.getElementById('wu-total-rescued').textContent=fN(r.total_rescued||0);
+    document.getElementById('wu-domains-count').textContent=fN((r.by_domain||[]).length);
+    document.getElementById('wu-domain-stats-body').innerHTML=(r.by_domain||[]).map(d=>
+      `<tr><td style="font-family:var(--mono);font-size:12px">${esc(d.domain)}</td><td>${fN(d.sent)}</td><td>${fN(d.rescued||0)}</td></tr>`
+    ).join('')||'<tr><td colspan="3" style="color:var(--text-2);text-align:center">No warmup emails sent yet</td></tr>';
+  }catch(e){console.error(e)}
+}
+
+async function checkAccountPlacement(){
+  const id=document.getElementById('wu-check-id').value;
+  if(!id)return alert('Enter an account ID.');
+  const el=document.getElementById('wu-placement-result');
+  el.textContent='Checking…';
+  try{
+    const r=await API(`/api/warmup/accounts/${id}/placement`,{method:'POST'});
+    const rate=((r.inbox_rate||0)*100).toFixed(0);
+    const col=rate>=80?'var(--success)':rate>=50?'var(--warning)':'var(--danger)';
+    el.innerHTML=`<span style="color:${col};font-size:14px;font-weight:600">${rate}% inbox rate</span> — ${fN(r.inbox)} inbox / ${fN(r.spam)} spam (${fN(r.total)} total)`;
+  }catch(e){el.style.color='var(--danger)';el.textContent='Error: '+e.message}
+}
+
+async function checkPlacementById(id){
+  appendLog('warmup-terminal','info',`Checking placement for account ${id}…`);
+  switchWuTab('run');
+  try{
+    const r=await API(`/api/warmup/accounts/${id}/placement`,{method:'POST'});
+    const rate=((r.inbox_rate||0)*100).toFixed(0);
+    appendLog('warmup-terminal',rate>=80?'success':'warning',`Account ${id}: ${rate}% inbox (${r.inbox}i / ${r.spam}s)`);
+  }catch(e){appendLog('warmup-terminal','error',`Placement check failed: ${e.message}`)}
+}
+
+async function rescueAccount(){
+  const id=document.getElementById('wu-check-id').value;
+  if(!id)return alert('Enter an account ID.');
+  const el=document.getElementById('wu-placement-result');
+  el.textContent='Rescuing emails from spam…';
+  try{
+    const r=await API(`/api/warmup/accounts/${id}/rescue`,{method:'POST'});
+    el.innerHTML=`<span style="color:var(--success)">Rescued ${fN(r.rescued)} emails from spam for ${esc(r.account)}</span>`;
+  }catch(e){el.style.color='var(--danger)';el.textContent='Error: '+e.message}
+}
+
+async function rescueById(id){
+  appendLog('warmup-terminal','info',`Rescuing spam for account ${id}…`);
+  switchWuTab('run');
+  try{
+    const r=await API(`/api/warmup/accounts/${id}/rescue`,{method:'POST'});
+    appendLog('warmup-terminal','success',`Rescued ${r.rescued} emails from spam — ${r.account}`);
+  }catch(e){appendLog('warmup-terminal','error',`Rescue failed: ${e.message}`)}
+}
+
+async function rescueAllSpam(btn){
+  if(btn){btn.disabled=true;btn.textContent='Rescuing…'}
+  appendLog('warmup-terminal','info','Running spam rescue on all receiver accounts…');
+  switchWuTab('run');
+  try{
+    const r=await API('/api/warmup/rescue-all',{method:'POST'});
+    appendLog('warmup-terminal','success',`Rescue complete: ${r.rescued} emails rescued across ${r.accounts_checked} accounts`);
+  }catch(e){appendLog('warmup-terminal','error',e.message)}
+  finally{if(btn){btn.disabled=false;btn.textContent='🛟 Rescue All from Spam'}}
+}
+
+async function testWuAccount(){
+  const id=document.getElementById('wu-check-id').value;
+  if(!id)return alert('Enter an account ID.');
+  const el=document.getElementById('wu-placement-result');
+  el.textContent='Testing SMTP connection…';
+  try{
+    const r=await API(`/api/warmup/accounts/${id}/test`,{method:'POST'});
+    el.innerHTML=r.ok
+      ?`<span style="color:var(--success)">✓ SMTP connection OK for ${esc(r.email)}</span>`
+      :`<span style="color:var(--danger)">✗ SMTP failed: ${esc(r.error||'Unknown error')}</span>`;
+  }catch(e){el.style.color='var(--danger)';el.textContent='Error: '+e.message}
+}
+
+async function testWuAccountById(id){
+  appendLog('warmup-terminal','info',`Testing SMTP for account ${id}…`);
+  switchWuTab('run');
+  try{
+    const r=await API(`/api/warmup/accounts/${id}/test`,{method:'POST'});
+    appendLog('warmup-terminal',r.ok?'success':'error',r.ok?`✓ SMTP OK — ${r.email}`:`✗ SMTP failed — ${r.error}`);
+  }catch(e){appendLog('warmup-terminal','error',e.message)}
+}
+
+async function loadWarmupLogs(){
+  const limit=50;
+  try{
+    const r=await API(`/api/warmup/logs?limit=${limit}&offset=${S.wuLogsOffset}`);
+    const b=document.getElementById('wu-logs-body');
+    if(!r.logs.length){b.innerHTML='<tr><td colspan="5" style="color:var(--text-2);text-align:center;padding:24px">No warmup emails logged yet.</td></tr>';return}
+    b.innerHTML=r.logs.map(l=>`<tr>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--text-2)">${fD(l.sent_at)}</td>
+      <td style="font-size:12px">${esc(l.from_email||'—')}</td>
+      <td style="font-size:12px">${esc(l.to_email||'—')}</td>
+      <td style="font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l.subject||'—')}</td>
+      <td>${l.rescued?'<span class="badge badge-green">Yes</span>':'<span class="badge badge-dim">No</span>'}</td>
+    </tr>`).join('');
+    renderPager('wu-logs-pager',S.wuLogsOffset,limit,r.total,(o)=>{S.wuLogsOffset=o;loadWarmupLogs()});
+  }catch(e){console.error(e)}
+}
+// ── WhatsApp ──
+async function loadWaLeads(){
+  const minScore=document.getElementById('wa-min-score').value||40;
+  try{
+    const leads=await API(`/api/whatsapp/leads?min_score=${minScore}&limit=200`);
+    S.waSel=new Set();
+    const b=document.getElementById('wa-leads-body');
+    const wrap=document.getElementById('wa-leads-wrap');
+    if(!leads || !leads.length){
+      b.innerHTML='<tr><td colspan="7"><div class="empty"><p>No leads with phone numbers found at this score threshold.</p></div></td></tr>';
+      wrap.style.display='';
+      // Disable the "Generate Messages" button since there's nothing to generate
+      const genBtn=document.getElementById('wa-gen-btn');
+      if(genBtn)genBtn.disabled=true;
+      updateWaSelCount();
+      appendLog('whatsapp-terminal','warning',`No leads with phone numbers at score >= ${minScore}`);
+      return
+    }
+    const genBtn=document.getElementById('wa-gen-btn');
+    if(genBtn)genBtn.disabled=false;
+    b.innerHTML=leads.map(l=>`<tr>
+      <td><input type="checkbox" class="wa-cb" value="${l.id}" onchange="toggleWa(${l.id},this)"></td>
+      <td><div class="score-badge" style="background:var(--border);color:var(--text)">${l.lead_score}</div></td>
+      <td><strong>${esc(l.business_name)}</strong></td>
+      <td style="font-family:var(--mono);font-size:12px">${esc(l.phone||'—')}</td>
+      <td><span class="badge badge-accent" style="font-size:10px">${esc(l.ideal_service||'—')}</span></td>
+      <td style="font-size:12px;color:var(--accent)">${esc(l.decision_maker||'—')}</td>
+      <td><button class="btn btn-outline btn-sm" data-id="${l.id}" data-name="${esc(l.business_name)}" onclick="generateSingleWa(this.dataset.id, this.dataset.name)">Gen</button></td>
+    </tr>`).join('');
+    document.getElementById('wa-leads-wrap').style.display='';
+    updateWaSelCount();
+    appendLog('whatsapp-terminal','info',`Loaded ${leads.length} leads with phone numbers`);
+  }catch(e){appendLog('whatsapp-terminal','error',e.message)}
+}
+function toggleWa(id,cb){cb.checked?S.waSel.add(id):S.waSel.delete(id);updateWaSelCount()}
+function toggleAllWa(m){document.querySelectorAll('.wa-cb').forEach(cb=>{cb.checked=m.checked;m.checked?S.waSel.add(+cb.value):S.waSel.delete(+cb.value)});updateWaSelCount()}
+function updateWaSelCount(){document.getElementById('wa-sel-count').textContent=S.waSel.size+' selected'}
+
+async function generateSingleWa(id, name){
+  appendLog('whatsapp-terminal','generating',`Generating for ${name}…`);
+  try{
+    const r=await API('/api/whatsapp/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lead_id:id})});
+    if(!r.message){appendLog('whatsapp-terminal','error',`AI failed for ${name}`);return}
+    appendLog('whatsapp-terminal','success',`${name}: ${r.message}`);
+    showWaMessage(id, name, r.message, r.phone);
+  }catch(e){appendLog('whatsapp-terminal','error',`${name}: ${e.message}`)}
+}
+
+async function generateWhatsAppBatch(){
+  if(!S.waSel.size){alert('Select at least one lead.');return}
+  const btn=document.getElementById('wa-gen-btn');
+  btn.disabled=true;
+  document.getElementById('wa-results-wrap').style.display='';
+  document.getElementById('wa-messages-list').innerHTML='';
+  const total=S.waSel.size;
+  appendLog('whatsapp-terminal','info',`Generating ${total} messages (concurrency=4)…`);
+  const ids=[...S.waSel];
+  let done=0;
+  const CONCURRENCY=4;
+  async function worker(){
+    while(ids.length){
+      const id=ids.shift();
+      try{
+        const r=await API('/api/whatsapp/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lead_id:id})});
+        if(r && r.message){showWaMessage(id,r.business_name,r.message,r.phone);appendLog('whatsapp-terminal','sent',`[OK] ${r.business_name}`)}
+        else appendLog('whatsapp-terminal','warning',`AI returned empty for ID ${id}`);
+      }catch(e){appendLog('whatsapp-terminal','error',`ID ${id}: ${e.message}`)}
+      done++;
+      appendLog('whatsapp-terminal','progress',`${done}/${total} complete`);
+    }
+  }
+  await Promise.all(Array.from({length:Math.min(CONCURRENCY,total)},worker));
+  btn.disabled=false;
+  appendLog('whatsapp-terminal','summary',`Done. Generated ${done} messages.`);
+}
+
+function showWaMessage(id, name, message, phone){
+  const list=document.getElementById('wa-messages-list');
+  const card=document.createElement('div');
+  card.style.cssText='background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px';
+  const phoneDigits = phone ? String(phone).replace(/\D/g,'') : '';
+  card.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <div>
+        <strong style="font-size:13px">${esc(name||'Lead #'+id)}</strong>
+        ${phone?`<span style="font-family:var(--mono);font-size:11px;color:var(--text-2);margin-left:8px">${esc(phone)}</span>`:''}
+      </div>
+      <button class="btn btn-outline btn-sm" data-copy-btn>Copy</button>
+    </div>
+    <div style="font-size:13px;line-height:1.6;color:var(--text);background:var(--card);padding:10px 12px;border-radius:4px;border:1px solid var(--border)">${esc(message)}</div>
+    ${phoneDigits?`<div style="margin-top:8px"><a href="https://wa.me/${phoneDigits}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm" style="text-decoration:none">Open in WhatsApp</a></div>`:''}
+  `;
+  // Attach the raw message to the button directly (avoids HTML-entity round-trip bugs)
+  const copyBtn = card.querySelector('[data-copy-btn]');
+  if (copyBtn) {
+    copyBtn._msg = message;
+    copyBtn.addEventListener('click', () => copyWaMsg(copyBtn));
+  }
+  list.appendChild(card);
+  list.scrollTop=list.scrollHeight;
+}
+
+function copyWaMsg(btn){
+  const msg = btn._msg || '';
+  const done = () => { btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy',1500); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(msg).then(done).catch(()=>{
+      const ta=document.createElement('textarea');ta.value=msg;document.body.appendChild(ta);ta.select();
+      try{document.execCommand('copy');}finally{document.body.removeChild(ta);}
+      done();
+    });
+  } else {
+    const ta=document.createElement('textarea');ta.value=msg;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');}finally{document.body.removeChild(ta);}
+    done();
+  }
+}
+function clearWaResults(){document.getElementById('wa-messages-list').innerHTML='';document.getElementById('wa-results-wrap').style.display='none'}
+
+// ── Outreach Accounts ──
+async function loadOutreachAccounts(){
+  try{
+    const accounts=await API('/api/outreach-accounts');
+    const b=document.getElementById('oa-accounts-body');
+    if(!accounts.length){
+      b.innerHTML='<tr><td colspan="9" style="color:var(--text-2);text-align:center;padding:20px">No accounts added. Using single config account as fallback.</td></tr>';
+      return;
+    }
+    b.innerHTML=accounts.map(a=>{
+      const isBrevo=a.sending_mode==='brevo_relay';
+      const modeBadge=isBrevo?'<span class="badge" style="background:rgba(33,150,243,.15);color:#64b5f6">Brevo</span>':'<span class="badge badge-dim">SMTP</span>';
+      const smtpLabel=isBrevo?'Brevo Relay':(esc(a.smtp_host)+':'+a.smtp_port);
+      return `<tr>
+      <td style="font-family:var(--mono);font-size:12px">${esc(a.email)}</td>
+      <td>${modeBadge}</td>
+      <td style="font-size:12px">${esc(a.display_name||'—')}</td>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--text-2)">${smtpLabel}</td>
+      <td style="font-family:var(--mono)">${fN(a.daily_limit)}</td>
+      <td style="font-family:var(--mono);color:${a.sent_today>0?'var(--warning)':'var(--text-2)'}">${fN(a.sent_today)}</td>
+      <td style="font-family:var(--mono);color:${a.remaining>50?'var(--success)':a.remaining>0?'var(--warning)':'var(--danger)'}">${fN(a.remaining)}</td>
+      <td><span class="badge ${a.active?'badge-green':'badge-dim'}">${a.active?'Active':'Paused'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-outline btn-sm" onclick="testOA(${a.id})" title="Test">⚡</button>
+        <button class="btn btn-outline btn-sm" onclick="editOA(${a.id})" title="Edit">⚙</button>
+        <button class="btn btn-outline btn-sm" onclick="toggleOA(${a.id},${a.active?0:1})" title="${a.active?'Pause':'Activate'}">${a.active?'⏸':'▷'}</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteOA(${a.id})" title="Delete">✗</button>
+      </td>
+    </tr>`}).join('');
+  }catch(e){console.error(e)}
+}
+
+function toggleOaMode(){
+  const mode=document.getElementById('oa-sending-mode').value;
+  const smtpFields=document.querySelectorAll('.oa-smtp-fields');
+  const brevoFields=document.querySelectorAll('.oa-brevo-fields');
+  const passGroup=document.getElementById('oa-pass-group');
+  if(mode==='brevo_relay'){
+    smtpFields.forEach(el=>el.style.display='none');
+    brevoFields.forEach(el=>el.style.display='');
+    if(passGroup)passGroup.style.display='none';
+    document.getElementById('oa-email').placeholder='sarah@outreach.yourdomain.com';
+  }else{
+    smtpFields.forEach(el=>el.style.display='');
+    brevoFields.forEach(el=>el.style.display='none');
+    if(passGroup)passGroup.style.display='';
+    document.getElementById('oa-email').placeholder='you@yourdomain.com';
+  }
+}
+
+async function testBrevo(){
+  try{
+    const r=await API('/api/brevo/test');
+    if(r.ok) alert('✓ Brevo SMTP connection successful');
+    else alert('✗ Brevo SMTP failed — check your SMTP Login and Key in settings');
+  }catch(e){alert('Brevo test failed: '+e.message)}
+}
+
+async function addOutreachAccount(){
+  const email=document.getElementById('oa-email').value.trim();
+  const sending_mode=document.getElementById('oa-sending-mode').value;
+  const password=sending_mode==='brevo_relay'?'':document.getElementById('oa-pass').value;
+  const display_name=document.getElementById('oa-name').value.trim()||null;
+  const smtp_host=document.getElementById('oa-smtp-host').value.trim()||'smtp.gmail.com';
+  const smtp_port=parseInt(document.getElementById('oa-smtp-port').value)||587;
+  const imap_host=document.getElementById('oa-imap-host').value.trim()||'imap.gmail.com';
+  const daily_limit=parseInt(document.getElementById('oa-daily-limit').value)||150;
+  const signature=document.getElementById('oa-signature').value.trim()||null;
+  if(!email)return alert('Email is required.');
+  if(sending_mode==='smtp_password'&&!password)return alert('Password is required for SMTP mode.');
+  try{
+    await API('/api/outreach-accounts',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password,smtp_host,smtp_port,imap_host,display_name,daily_limit,sending_mode,signature})});
+    document.getElementById('oa-email').value='';
+    document.getElementById('oa-pass').value='';
+    document.getElementById('oa-name').value='';
+    document.getElementById('oa-smtp-host').value='';
+    document.getElementById('oa-imap-host').value='';
+    document.getElementById('oa-signature').value='';
+    loadOutreachAccounts();
+  }catch(e){alert('Failed to add account: '+e.message)}
+}
+
+async function deleteOA(id){
+  if(!confirm('Remove this outreach account?'))return;
+  try{await API('/api/outreach-accounts/'+id,{method:'DELETE'});loadOutreachAccounts()}catch(e){alert(e.message)}
+}
+
+async function toggleOA(id, active){
+  try{await API('/api/outreach-accounts/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({active})});loadOutreachAccounts()}catch(e){alert(e.message)}
+}
+
+async function testOA(id){
+  try{
+    const r=await API('/api/outreach-accounts/'+id+'/test',{method:'POST'});
+    const mode=r.mode==='brevo_relay'?' (Brevo)':' (SMTP)';
+    if(r.ok) alert('✓ SMTP connection successful for '+r.email+mode);
+    else alert('✗ SMTP failed for '+r.email+mode+': '+(r.error||'unknown error'));
+  }catch(e){alert('Test failed: '+e.message)}
+}
+
+async function editOA(id){
+  try{
+    const r=await API('/api/outreach-accounts');
+    const a=r.find(x=>x.id===id);
+    if(!a)return;
+    const isBrevo=a.sending_mode==='brevo_relay';
+    openModal(`<h3 style="font-family:var(--cond);font-size:17px;margin-bottom:14px">Edit — ${esc(a.email)}</h3>
+      <div class="form-row"><div class="form-group">
+        <label for="oa-edit-mode">Sending Mode</label>
+        <select id="oa-edit-mode" onchange="toggleOaEditMode()" style="width:180px;padding:6px 8px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px">
+          <option value="smtp_password" ${!isBrevo?'selected':''}>SMTP Password</option>
+          <option value="brevo_relay" ${isBrevo?'selected':''}>Brevo Relay</option>
+        </select>
+      </div>
+      <div class="form-group"><label for="oa-edit-name">Display Name</label><input type="text" id="oa-edit-name" value="${esc(a.display_name||'')}" style="width:200px"></div></div>
+      <div class="form-row oa-edit-smtp-fields" style="${isBrevo?'display:none':''}">
+        <div class="form-group"><label for="oa-edit-smtp-host">SMTP Host</label><input type="text" id="oa-edit-smtp-host" value="${esc(a.smtp_host||'smtp.gmail.com')}" style="width:180px"></div>
+        <div class="form-group"><label for="oa-edit-smtp-port">SMTP Port</label><input type="number" id="oa-edit-smtp-port" value="${a.smtp_port||587}" style="width:80px"></div>
+        <div class="form-group"><label for="oa-edit-imap-host">IMAP Host</label><input type="text" id="oa-edit-imap-host" value="${esc(a.imap_host||'imap.gmail.com')}" style="width:180px"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="oa-edit-daily-limit">Daily Limit</label><input type="number" id="oa-edit-daily-limit" value="${a.daily_limit||150}" style="width:90px"></div>
+        <div class="form-group oa-edit-smtp-fields" style="${isBrevo?'display:none':''}"><label for="oa-edit-pass">New Password <span style="font-weight:400;font-size:10px;color:var(--text-3)">(leave blank to keep)</span></label><input type="password" id="oa-edit-pass" style="width:150px"></div>
+      </div>
+      <div class="form-row oa-edit-brevo-fields" style="${isBrevo?'':'display:none'}">
+        <div class="form-group" style="flex:1"><label for="oa-edit-signature">Signature</label><textarea id="oa-edit-signature" rows="2" style="width:100%;padding:6px 8px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:12px;font-family:inherit">${esc(a.signature||'')}</textarea></div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:8px">
+        <button class="btn btn-primary" onclick="saveOA(${a.id})">Save</button>
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      </div>`);
+  }catch(e){alert(e.message)}
+}
+
+function toggleOaEditMode(){
+  const mode=document.getElementById('oa-edit-mode').value;
+  const smtpFields=document.querySelectorAll('.oa-edit-smtp-fields');
+  const brevoFields=document.querySelectorAll('.oa-edit-brevo-fields');
+  if(mode==='brevo_relay'){
+    smtpFields.forEach(el=>el.style.display='none');
+    brevoFields.forEach(el=>el.style.display='');
+  }else{
+    smtpFields.forEach(el=>el.style.display='');
+    brevoFields.forEach(el=>el.style.display='none');
+  }
+}
+
+async function saveOA(id){
+  const display_name=document.getElementById('oa-edit-name').value.trim()||null;
+  const smtp_host=document.getElementById('oa-edit-smtp-host').value.trim();
+  const smtp_port=parseInt(document.getElementById('oa-edit-smtp-port').value);
+  const imap_host=document.getElementById('oa-edit-imap-host').value.trim();
+  const daily_limit=parseInt(document.getElementById('oa-edit-daily-limit').value);
+  const password=document.getElementById('oa-edit-pass')?document.getElementById('oa-edit-pass').value||null:null;
+  const sending_mode=document.getElementById('oa-edit-mode').value;
+  const signature=document.getElementById('oa-edit-signature')?document.getElementById('oa-edit-signature').value.trim()||null:null;
+  const payload={display_name,smtp_host,smtp_port,imap_host,daily_limit,sending_mode,signature};
+  if(password)payload.password=password;
+  try{
+    await API('/api/outreach-accounts/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    closeModal();loadOutreachAccounts();
+  }catch(e){alert('Save failed: '+e.message)}
+}
+
+// ── Settings ──
+async function loadSettings(){
+  try{
+    const c=await API('/api/config');
+    Object.entries(c).forEach(([k,v])=>{
+      const el=document.getElementById('cfg-'+k);
+      if(!el)return;
+      if(el.type==='checkbox')el.checked=v==='true'||v==='1'||v==='yes';
+      else el.value=v;
+    });
+  }catch(e){console.error(e)}
+  loadOutreachAccounts();
+}
+async function saveSettings(){const u={};document.querySelectorAll('[id^="cfg-"]').forEach(el=>{const val=el.type==='checkbox'?(el.checked?'true':'false'):el.value;u[el.id.replace('cfg-','')]=val});const st=document.getElementById('settings-status');try{await API('/api/config',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(u)});st.style.display='';st.style.background='rgba(0,230,118,.1)';st.style.border='1px solid rgba(0,230,118,.3)';st.style.color='var(--success)';st.textContent='✓ Saved.';setTimeout(()=>st.style.display='none',4000);testSmtp()}catch(e){st.style.display='';st.style.background='rgba(255,23,68,.1)';st.style.color='var(--danger)';st.textContent='✗ '+e.message}}
+
+// ── Job Stop ──
+function stopJob(n){const es=S.jobs[n];if(es){es.close();delete S.jobs[n]}
+if(n==='leadgen'){document.getElementById('lg-btn').disabled=false;document.getElementById('lg-stop').style.display='none';appendLog('terminal','warning','Stopped.')}
+if(n==='outreach'){document.getElementById('out-stop-btn').style.display='none';document.getElementById('out-send-btn').disabled=false;appendLog('out-terminal','warning','Stopped.')}
+if(n==='intel'){document.getElementById('intel-btn').disabled=false;document.getElementById('intel-stop').style.display='none';document.getElementById('intel-progress').classList.remove('visible');appendLog('intel-terminal','warning','Stopped.')}
+if(n==='followups'){appendLog('fu-terminal','warning','Stopped.')}
+if(n==='replyScan'){appendLog('rep-terminal','warning','Stopped.')}}
+
+// ── Helpers ──
+function appendLog(tid,type,message){const t=document.getElementById(tid);if(!t)return;const ts=new Date().toLocaleTimeString('en-GB');const ic={info:'<i class="fas fa-info-circle"></i>',success:'<i class="fas fa-check"></i>',error:'<i class="fas fa-times"></i>',warning:'<i class="fas fa-exclamation-triangle"></i>',sent:'<i class="fas fa-paper-plane"></i>',skip:'<i class="fas fa-minus"></i>',generating:'<i class="fas fa-sync-alt fa-spin"></i>',progress:'<i class="fas fa-spinner fa-spin"></i>',summary:'<i class="fas fa-star"></i>',done:'<i class="fas fa-check"></i>'};const cl={info:'log-info',success:'log-success',error:'log-error',warning:'log-warning',sent:'log-sent',skip:'log-skip',generating:'log-generating',progress:'log-progress',summary:'log-success',done:'log-success'};const l=document.createElement('div');l.innerHTML=`<span class="log-ts">${ts}</span><span class="log-prefix ${cl[type]||'log-info'}">${ic[type]||'<i class="fas fa-circle"></i>'}</span><span class="${cl[type]||'log-info'}">${esc(message)}</span>`;t.appendChild(l);t.scrollTop=t.scrollHeight}
+function clearLog(tid){const t=document.getElementById(tid);if(t)t.innerHTML=''}
+function setProgress(fid,lid,pid,v,total){const p=total>0?Math.min(100,Math.round(v/total*100)):0;document.getElementById(fid).style.width=p+'%';document.getElementById(lid).textContent=fN(v)+' / '+fN(total)+' leads';document.getElementById(pid).textContent=p+'%'}
+const _pagerCbs={};
+function renderPager(cid,off,lim,tot,fn){
+  _pagerCbs[cid]=fn;
+  const c=document.getElementById(cid);
+  const pp=Math.ceil(tot/lim),cur=Math.floor(off/lim);
+  if(pp<=1){c.innerHTML='';return}
+  const n=fn.name||cid;
+  let h=`<span>Page ${cur+1}/${pp}</span>`;
+  if(cur>0)h+=`<button class="btn-page" onclick="_pagerCbs['${cid}'](${(cur-1)*lim})">‹</button>`;
+  for(let i=Math.max(0,cur-2);i<=Math.min(pp-1,cur+2);i++)h+=`<button class="btn-page${i===cur?' active':''}" onclick="_pagerCbs['${cid}'](${i*lim})">${i+1}</button>`;
+  if(cur<pp-1)h+=`<button class="btn-page" onclick="_pagerCbs['${cid}'](${(cur+1)*lim})">›</button>`;
+  c.innerHTML=h
+}
+function openModal(h){S._lastFocus=document.activeElement;document.body.style.overflow='hidden';document.getElementById('modal-content').innerHTML=h;document.getElementById('modal-overlay').classList.add('open');const inp=document.querySelector('#modal input, #modal textarea, #modal select, #modal button');if(inp)inp.focus()}
+function closeModal(e){if(!e||e.target===document.getElementById('modal-overlay')){document.getElementById('modal-overlay').classList.remove('open');document.body.style.overflow='';if(S._lastFocus){S._lastFocus.focus();delete S._lastFocus}}}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.getElementById('modal-overlay').classList.contains('open')){closeModal()}});
+function $(id,v){const el=document.getElementById(id);if(el)el.textContent=v}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML.replace(/'/g,'&#39;')}
+function fN(n){return n!=null?Number(n).toLocaleString():'0'}
+function formatPercent(p){if(p==null)return'—';return Math.round(Number(p)*100)+'%'}
+function fD(s){if(!s)return'—';try{return new Date(s).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit'})}catch{return s}}
+function statusBadge(s){return`<span class="badge ${({active:'badge-green',paused:'badge-warn'})[s]||'badge-dim'}">${s||'?'}</span>`}
+function tryJ(s,d){try{return JSON.parse(s)}catch{return d}}
+
+(async()=>{
+  if (!S.token) { showLoginModal(); return; }
+  testSmtp();
+  setInterval(testSmtp, 30000);
+  loadDash();
+})();
+</script>
+</body>
+</html>

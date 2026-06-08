@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Digital Presence Audit — Troy Rhone Garden Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f8fafc;--card:#ffffff;--border:#e2e8f0;--text:#0f172a;--text2:#475569;--text3:#94a3b8;--primary:#2563eb;--primary-dark:#1d4ed8;--red:#ef4444;--red-bg:#fef2f2;--red-border:#fecaca;--amber:#f59e0b;--amber-bg:#fffbeb;--green:#22c55e;--green-bg:#f0fdf4;--green-border:#bbf7d0;--radius:12px;--shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);--shadow-lg:0 10px 25px rgba(0,0,0,.08)}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+.container{max-width:640px;margin:0 auto;padding:32px 20px}
+
+.header{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);color:#fff;padding:48px 36px 40px;border-radius:20px;margin-bottom:28px;position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(15,23,42,.35)}
+.header::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(59,130,246,.08) 0%,transparent 60%);pointer-events:none}
+.header-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#60a5fa;margin-bottom:12px}
+.header h1{font-size:22px;font-weight:700;margin-bottom:4px;position:relative}
+.header-sub{color:#94a3b8;font-size:14px;font-weight:400;position:relative}
+.loss-block{margin:32px 0 20px;position:relative}
+.loss-amount{font-size:44px;font-weight:800;letter-spacing:-1px;color:#f87171;line-height:1.1}
+.loss-amount .period{font-size:18px;font-weight:500;color:#94a3b8;margin-left:2px}
+.loss-label{font-size:13px;color:#94a3b8;margin-top:6px;font-weight:500}
+.loss-annual{margin-top:10px;font-size:13px;color:#64748b;font-weight:500}
+.loss-annual strong{color:#fbbf24;font-weight:700}
+.expiry-pill{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:6px 14px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);border-radius:100px;font-size:12px;color:#fbbf24;font-weight:500}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-header{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.card-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.card-icon.red{background:var(--red-bg);color:var(--red)}
+.card-icon.blue{background:#eff6ff;color:var(--primary)}
+.card-icon.green{background:var(--green-bg);color:var(--green)}
+.card-icon.amber{background:var(--amber-bg);color:var(--amber)}
+.card-title{font-size:15px;font-weight:700;color:var(--text)}
+
+.impact-table{width:100%;border-collapse:collapse}
+.impact-table td{padding:12px 0;border-bottom:1px solid #f1f5f9;font-size:14px}
+.impact-issue{color:var(--text2);font-weight:500}
+.impact-loss{color:var(--red);font-weight:700;text-align:right;white-space:nowrap}
+.impact-total{display:flex;justify-content:space-between;align-items:center;padding:16px 0 0;margin-top:4px;border-top:2px solid var(--text)}
+.impact-total-label{font-weight:700;font-size:14px}
+.impact-total-val{color:var(--red);font-size:20px;font-weight:800}
+
+.tech-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f8fafc}
+.tech-row:last-child{border-bottom:none;padding-bottom:0}
+.tech-label{font-weight:600;font-size:13px;color:var(--text);min-width:110px}
+.tech-val{font-size:13px;color:var(--text2)}
+.tech-val-miss{color:var(--red);font-weight:600}
+
+.seo-table{width:100%;border-collapse:collapse}
+.seo-table td{padding:10px 0;border-bottom:1px solid #f8fafc;font-size:14px}
+.seo-kw{color:var(--text2);font-weight:500}
+.seo-badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:12px;font-weight:700}
+.seo-good{background:var(--green-bg);color:#15803d}
+.seo-ok{background:var(--amber-bg);color:#b45309}
+.seo-bad{background:var(--red-bg);color:#dc2626}
+
+.comp-row{padding:14px 16px;background:#f8fafc;border-radius:10px;margin-bottom:8px;border:1px solid #f1f5f9}
+.comp-name{font-weight:600;font-size:14px;color:var(--text);margin-bottom:8px}
+.comp-badges{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.comp-badge{padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600}
+.comp-yes{background:var(--green-bg);color:#15803d}
+.comp-no{background:var(--red-bg);color:#dc2626}
+.comp-rating{padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;background:#f1f5f9;color:var(--text2);margin-left:auto}
+
+.score-section{text-align:center;padding:12px 0}
+.score-ring-wrap{display:inline-block;position:relative}
+.score-ring{width:100px;height:100px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;position:relative}
+.score-ring svg{position:absolute;top:0;left:0;width:100%;height:100%;transform:rotate(-90deg)}
+.score-ring circle{fill:none;stroke-width:6;stroke-linecap:round}
+.score-ring .bg{stroke:#f1f5f9}
+.score-ring .fg{stroke:#f59e0b;stroke-dasharray:251.3;stroke-dashoffset:135.702}
+.score-desc{color:var(--text2);font-size:14px;margin-top:12px;font-weight:500}
+.score-badge{display:inline-block;margin-top:8px;padding:4px 14px;border-radius:100px;font-size:12px;font-weight:600;background:#fffbeb;color:#f59e0b;border:1px solid #f59e0b30}
+
+.capture-card{border:2px solid #eff6ff;background:linear-gradient(180deg,#fafbff 0%,#fff 100%)}
+.capture-card .card-icon{background:#eff6ff;color:var(--primary)}
+.form-input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;margin-bottom:12px;font-size:14px;font-family:inherit;transition:border-color .2s,box-shadow .2s;outline:none;color:var(--text)}
+.form-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.form-submit{width:100%;background:var(--primary);color:white;border:none;padding:13px 20px;border-radius:10px;font-weight:600;font-size:15px;cursor:pointer;transition:background .2s,transform .1s;font-family:inherit}
+.form-submit:hover{background:var(--primary-dark)}
+.form-submit:active{transform:scale(.98)}
+
+.cta{display:block;width:100%;background:linear-gradient(135deg,#059669,#10b981);color:#fff;text-align:center;padding:16px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none;margin-top:20px;box-shadow:0 4px 14px rgba(5,150,105,.3);transition:transform .15s,box-shadow .15s}
+.cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(5,150,105,.4)}
+.cta:active{transform:translateY(0)}
+
+.proof{text-align:center;background:#f0f9ff;border-color:#bae6fd;overflow:hidden;position:relative}
+.proof::before{content:'"';position:absolute;top:-8px;left:20px;font-size:80px;color:#bae6fd;font-family:Georgia,serif;line-height:1}
+.proof-text{color:#0369a1;font-size:14px;line-height:1.6;font-style:italic;position:relative;font-weight:500}
+
+.footer{text-align:center;color:var(--text3);font-size:12px;margin-top:36px;padding:20px 0;border-top:1px solid var(--border)}
+.footer-brand{font-weight:600;color:var(--text2)}
+
+.chart-container{position:relative;height:180px;margin-top:16px}
+
+@media(max-width:480px){
+  .header{padding:36px 24px 32px;border-radius:16px}
+  .loss-amount{font-size:34px}
+  .container{padding:20px 14px}
+  .card{padding:20px}
+}
+
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.card{animation:fadeInUp .4s ease both}
+.card:nth-child(2){animation-delay:.05s}
+.card:nth-child(3){animation-delay:.1s}
+.card:nth-child(4){animation-delay:.15s}
+.card:nth-child(5){animation-delay:.2s}
+.card:nth-child(6){animation-delay:.25s}
+</style>
+<img src="http://localhost:8000/t/audit/a593255b5d.gif" width="1" height="1" style="display:none">
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-label">Digital Presence Audit</div>
+    <h1>Troy Rhone Garden Design</h1>
+    <div class="header-sub">Prepared for Troy Rhone Garden Design</div>
+    <div class="loss-block">
+      <div class="loss-amount">£5,900<span class="period">/mo</span></div>
+      <div class="loss-label">Estimated Revenue Left on the Table</div>
+      <div class="loss-annual">That's <strong>£70,800/year</strong></div>
+    </div>
+    <div class="expiry-pill">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span id="countdown">Expires in 72 hours</span>
+    </div>
+  </div>
+
+  <div class="card"><div class="card-header"><div class="card-icon red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div><div class="card-title">Revenue Impact</div></div><table class="impact-table"><tr><td class="impact-issue">No Tracking Pixel</td><td class="impact-loss">-£1,174/mo</td></tr><tr><td class="impact-issue">Very Few Reviews (5)</td><td class="impact-loss">-£734/mo</td></tr><tr><td class="impact-issue">No Online Payments</td><td class="impact-loss">-£587/mo</td></tr><tr><td class="impact-issue">No CRM System</td><td class="impact-loss">-£1,761/mo</td></tr><tr><td class="impact-issue">No Email Marketing</td><td class="impact-loss">-£1,174/mo</td></tr><tr><td class="impact-issue">No Live Chat</td><td class="impact-loss">-£470/mo</td></tr></table><div class="impact-total"><span class="impact-total-label">Total Monthly</span><span class="impact-total-val">£5,900/mo</span></div><div class="chart-container"><canvas id="revenueChart"></canvas></div></div>
+  <div class="card"><div class="card-header"><div class="card-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div class="card-title">Technology Stack</div></div><div class="tech-row tech-found"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#bbf7d0"/><path d="M4.5 8l2.5 2.5 4.5-5" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="tech-label">Cms</span><span class="tech-val">Wordpress</span></div>
+<div class="tech-row tech-missing"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#fecaca"/><path d="M5 5l6 6M11 5l-6 6" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/></svg><span class="tech-label">Booking</span><span class="tech-val tech-val-miss">Not detected</span></div>
+<div class="tech-row tech-missing"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#fecaca"/><path d="M5 5l6 6M11 5l-6 6" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/></svg><span class="tech-label">Payments</span><span class="tech-val tech-val-miss">Not detected</span></div>
+<div class="tech-row tech-missing"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#fecaca"/><path d="M5 5l6 6M11 5l-6 6" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/></svg><span class="tech-label">Chat</span><span class="tech-val tech-val-miss">Not detected</span></div>
+<div class="tech-row tech-missing"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#fecaca"/><path d="M5 5l6 6M11 5l-6 6" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/></svg><span class="tech-label">Email Marketing</span><span class="tech-val tech-val-miss">Not detected</span></div>
+<div class="tech-row tech-missing"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#fecaca"/><path d="M5 5l6 6M11 5l-6 6" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/></svg><span class="tech-label">Crm</span><span class="tech-val tech-val-miss">Not detected</span></div>
+<div class="tech-row tech-missing"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#fecaca"/><path d="M5 5l6 6M11 5l-6 6" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/></svg><span class="tech-label">Accessibility</span><span class="tech-val tech-val-miss">Not detected</span></div>
+<div class="tech-row tech-missing"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#fecaca"/><path d="M5 5l6 6M11 5l-6 6" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/></svg><span class="tech-label">Hiring</span><span class="tech-val tech-val-miss">Not detected</span></div></div>
+  
+  
+  <div class="card"><div class="card-header"><div class="card-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="card-title">Digital Health Score</div></div><div class="score-section"><div class="score-ring-wrap"><div class="score-ring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="40"/><circle class="fg" cx="50" cy="50" r="40"/></svg><span>46</span></div></div><div class="score-desc">Room for improvement</div><span class="score-badge">46/100</span></div></div>
+  <div class="card capture-card"><div class="card-header"><div class="card-icon "><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg></div><div class="card-title">Get the Full Report</div></div><p style="color:var(--text2);font-size:14px;margin-bottom:16px">Enter your email to receive the detailed audit PDF and recommendations.</p><form id="captureForm" onsubmit="return false;"><input type="email" class="form-input" placeholder="your@business.com" required id="emailInput"><input type="hidden" id="token" value="a593255b5d"><button class="form-submit" onclick="submitCapture()">Send Report</button></form><div id="formResponse" style="margin-top:12px;font-size:14px;display:none"></div></div>
+
+  <a class="cta" href="mailto:?subject=Audit%20for%20Troy%20Rhone%20Garden%20Design">Book a Free Strategy Call</a>
+
+  <div class="card proof">
+    <div class="proof-text">Join 500+ businesses that used this audit to improve their digital presence.</div>
+  </div>
+
+  <div class="footer">
+    <span class="footer-brand">DD Marketer</span> · Generated from publicly available data · <span id="viewCounter">0</span> views
+  </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let expirySeconds = 72 * 3600;
+function updateCountdown() {
+  if (expirySeconds <= 0) { document.getElementById('countdown').textContent = 'Expired'; return; }
+  const h = Math.floor(expirySeconds / 3600);
+  const m = Math.floor((expirySeconds % 3600) / 60);
+  const s = expirySeconds % 60;
+  document.getElementById('countdown').textContent = h + 'h ' + m + 'm ' + s + 's';
+  expirySeconds--;
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+const impacts = [{"issue": "No Tracking Pixel", "monthly_loss": 1174, "annual_loss": 14088}, {"issue": "Very Few Reviews (5)", "monthly_loss": 734, "annual_loss": 8808}, {"issue": "No Online Payments", "monthly_loss": 587, "annual_loss": 7044}, {"issue": "No CRM System", "monthly_loss": 1761, "annual_loss": 21132}, {"issue": "No Email Marketing", "monthly_loss": 1174, "annual_loss": 14088}, {"issue": "No Live Chat", "monthly_loss": 470, "annual_loss": 5640}];
+if (impacts.length > 0) {
+  const ctx = document.getElementById('revenueChart');
+  if (ctx) new Chart(ctx.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: impacts.map(i => i.issue.length > 22 ? i.issue.substring(0, 22) + '…' : i.issue),
+      datasets: [{label: Monthly Loss + ' (' + "\u00a3" + ')', data: impacts.map(i => i.monthly_loss), backgroundColor: 'rgba(239,68,68,.15)', borderColor: '#ef4444', borderWidth: 1.5, borderRadius: 6, maxBarThickness: 48}]
+    },
+    options: {responsive: true, maintainAspectRatio: false, plugins: {legend: {display: false}}, scales: {y: {beginAtZero: true, ticks: {callback: v => "\u00a3" + v.toLocaleString(), font: {size: 11}}, grid: {color: '#f1f5f9'}}, x: {ticks: {font: {size: 10}, maxRotation: 45, minRotation: 0}, grid: {display: false}}}}
+  });
+}
+
+if (typeof localStorage !== 'undefined') {
+  const key = 'view_' + 'a593255b5d';
+  let views = parseInt(localStorage.getItem(key) || '0');
+  views++;
+  localStorage.setItem(key, views.toString());
+  document.getElementById('viewCounter').textContent = views;
+}
+
+async function submitCapture() {
+  const email = document.getElementById('emailInput').value.trim();
+  const token = document.getElementById('token').value;
+  if (!email) return;
+  const el = document.getElementById('formResponse');
+  el.style.display = 'block';
+  el.textContent = 'Sending...';
+  el.style.color = '#f59e0b';
+  try {
+    const res = await fetch('http://localhost:8000/api/webhook/capture', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email, token})});
+    const data = await res.json();
+    if (res.ok) { el.textContent = '✓ Report sent!'; el.style.color = '#22c55e'; }
+    else { el.textContent = '✗ ' + (data.error || 'Failed'); el.style.color = '#ef4444'; }
+  } catch { el.textContent = '✗ Network error'; el.style.color = '#ef4444'; }
+}
+</script>
+</body></html>

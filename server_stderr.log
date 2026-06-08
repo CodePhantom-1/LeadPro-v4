@@ -1,0 +1,14 @@
+C:\Users\Kntz\Desktop\CODING\NEWEST COME HERE\leadgen and emailer\config.py:275: UserWarning: [SKIP] LinkedIn outreach disabled: PHANTOMBUSTER_API_KEY not set.
+  warnings.warn(f"[SKIP] {feature} disabled: {name} not set.", UserWarning)
+C:\Users\Kntz\Desktop\CODING\NEWEST COME HERE\leadgen and emailer\config.py:275: UserWarning: [SKIP] SMS sending disabled: TWILIO_ACCOUNT_SID not set.
+  warnings.warn(f"[SKIP] {feature} disabled: {name} not set.", UserWarning)
+C:\Users\Kntz\Desktop\CODING\NEWEST COME HERE\leadgen and emailer\config.py:275: UserWarning: [SKIP] Slack notifications disabled: SLACK_WEBHOOK_URL not set.
+  warnings.warn(f"[SKIP] {feature} disabled: {name} not set.", UserWarning)
+C:\Users\Kntz\Desktop\CODING\NEWEST COME HERE\leadgen and emailer\config.py:275: UserWarning: [SKIP] Discord notifications disabled: DISCORD_WEBHOOK_URL not set.
+  warnings.warn(f"[SKIP] {feature} disabled: {name} not set.", UserWarning)
+INFO:     Started server process [18044]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('0.0.0.0', 8000): only one usage of each socket address (protocol/network address/port) is normally permitted
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
