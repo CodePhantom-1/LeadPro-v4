@@ -5,7 +5,7 @@ Emails now reference dollar amounts and use owner names.
 import json, re, math, random, threading
 from openai import OpenAI
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception, RetryError
-from config import AI_MODELS, YOUR_NAME, YOUR_COMPANY, SPAM_WORDS, CACHE_TTL_SECONDS
+from config import YOUR_NAME, YOUR_COMPANY, SPAM_WORDS, CACHE_TTL_SECONDS
 import config
 from cache import cache_get, cache_set
 from audit import get_currency_for_country, get_language_for_country
@@ -32,15 +32,6 @@ _client = None
 _last_api_key = None
 _client_lock = threading.Lock()
 _cache_lock = threading.Lock()
-_model_index = 0
-_model_lock = threading.Lock()
-
-def _next_model():
-    global _model_index
-    with _model_lock:
-        m = AI_MODELS[_model_index % len(AI_MODELS)]
-        _model_index += 1
-    return m
 
 def _get_client():
     """Lazy-init OpenAI client, picking up any .env reload of the API key."""
@@ -58,29 +49,21 @@ def _get_client():
 def _is_rate_limit(exc): return "429" in str(exc)
 
 def _call_ai(prompt, expect_json=True, max_retries=3):
-    """Call OpenRouter, caching only *successful* responses.
-
-    - For `expect_json=True`, we only cache a response if we successfully parsed
-      JSON out of it. Otherwise the cache would poison subsequent calls.
-    - For `expect_json=False`, we cache any non-empty string response.
-    """
-    # ── Cache lookup (cache stores dicts for JSON mode, strings for text mode) ──
+    """Call OpenRouter via openrouter/free auto-router, with model fallback."""
+    # ── Cache lookup ──
     cached = cache_get(prompt)
     if cached is not None:
         if expect_json:
-            # Cached value is already parsed JSON (dict/list)
             if isinstance(cached, (dict, list)):
                 return cached
-            # Legacy: cached string — try to parse
             try:
                 return json.loads(cached)
             except (json.JSONDecodeError, TypeError):
-                pass  # fall through and re-fetch
+                pass
         else:
             if isinstance(cached, str) and cached.strip():
                 return cached.strip()
 
-    # Define retry decorator once per call (not per model iteration)
     _retry = retry(
         stop=stop_after_attempt(max_retries),
         wait=wait_exponential(multiplier=10, min=10, max=60),
@@ -89,14 +72,8 @@ def _call_ai(prompt, expect_json=True, max_retries=3):
     )
 
     client = _get_client()
-    pool = AI_MODELS.copy()
-    random.shuffle(pool)
-    start_idx = 0
-    try:
-        start_idx = AI_MODELS.index(_next_model())
-    except ValueError:
-        pass
-    ordered = pool[start_idx:] + pool[:start_idx]
+    # Try the openrouter/free router first; fall back to individual free models
+    models = config.AI_MODELS + config._DEFAULT_FREE_FALLBACKS
 
     @_retry
     def _attempt(model):
@@ -107,7 +84,7 @@ def _call_ai(prompt, expect_json=True, max_retries=3):
         )
         return c.choices[0].message.content or ""
 
-    for model in ordered:
+    for model in models:
         try:
             raw = _attempt(model)
         except (RetryError, Exception):

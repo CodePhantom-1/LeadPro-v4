@@ -211,16 +211,15 @@ SCORE_WEIGHTS = {
 }
 
 # ── AI Model Pool ─────────────────────────────────────────────────────────────
-AI_MODELS = [
-    "google/gemma-3-27b-it:free",
+# ── AI Model — OpenRouter free auto-router ──────────────────────────────────────
+# Uses openrouter/free which automatically selects the best available free model
+# for each request. No API key needed for free-tier inference.
+AI_MODELS = ["openrouter/free"]
+
+_DEFAULT_FREE_FALLBACKS = [
     "google/gemini-2.0-flash-exp:free",
     "meta-llama/llama-3.3-70b-instruct:free",
-    "mistralai/mistral-small-3.1-24b-instruct:free",
-    "nousresearch/hermes-3-llama-3.1-405b:free",
     "deepseek/deepseek-r1-0528:free",
-    "mistralai/mistral-7b-instruct:free",
-    "meta-llama/llama-3.2-3b-instruct:free",
-    "microsoft/phi-4:free",
 ]
 
 # ── Competitor Filters ────────────────────────────────────────────────────────

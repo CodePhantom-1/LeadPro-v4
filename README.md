@@ -4,6 +4,8 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-00a393)](https://fastapi.tiangolo.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+> **💸 Freemium by Design** — LeadPro uses [OpenRouter's](https://openrouter.ai) `openrouter/free` auto-router for all AI generation, which automatically selects from available free models. The only services you may need to pay for are [Serper](https://serper.dev) (lead scraping, ~$50/mo) and optional email sending via [Brevo](https://brevo.com) (free tier: 300 emails/day). Everything else — AI generation, email warmup, analytics, proposal PDFs, and audit pages — runs on free infrastructure.
+
 **LeadPro v4** is a self-hostable, AI-powered lead generation and multi-agent email outreach platform. It discovers leads from Google Maps, Yelp, and web search, audits their websites for ops gaps and revenue opportunities, then sends personalized AI-generated emails from a pool of sender identities — all from a single FastAPI server with an embedded SPA dashboard.
 
 ## Table of Contents
