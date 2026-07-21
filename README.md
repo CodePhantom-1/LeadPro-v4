@@ -1,8 +1,13 @@
+![LeadPro v4 — AI Lead Generation & Multi-Agent Cold Outreach](docs/banner.png)
+
 # LeadPro v4 — AI-Powered Lead Generation & Multi-Agent Email Outreach
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-00a393)](https://fastapi.tiangolo.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/CodePhantom-1/LeadPro-4?style=social)](https://github.com/CodePhantom-1/LeadPro-4/stargazers)
+
+**Find local businesses, audit their websites for revenue leaks, and send personalized AI-written cold emails — all self-hosted and mostly free.** If it saves you time, **⭐ star the repo** so others can find it.
 
 > **💸 Freemium by Design** — LeadPro uses [OpenRouter's](https://openrouter.ai) `openrouter/free` auto-router for all AI generation, which automatically selects from available free models. The only services you may need to pay for are [Serper](https://serper.dev) (lead scraping, 2000 API calls free tier then ~$50/mo) and optional email sending via [Brevo](https://brevo.com) (free tier: 300 emails/day). Everything else — AI generation, email warmup, analytics, proposal PDFs, and audit pages — runs on free infrastructure.
 
